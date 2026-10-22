@@ -396,75 +396,114 @@
     {
       "name": "UsersTable",
       "category": "data",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/data/UsersTable.tsx",
-      "description": "Generic admin data table for user administration and audit browsers (UserAdministration, SystemAuditBrowser).",
+      "description": "Admin data table for user administration (UserAdministration): name, username, role, org, enabled flag, last active, row actions slot.",
       "useCases": ["admin", "users", "user administration", "management table", "generic table"],
       "dependencies": [],
-      "artifacts": []
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/data/UsersTable.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/UsersTableDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "AuditTimeline",
       "category": "data",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/data/AuditTimeline.tsx",
       "description": "Chronological audit log / event timeline for SystemAuditBrowser and application history.",
       "useCases": ["audit", "timeline", "history", "log", "events", "audit trail"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/data/AuditTimeline.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/AuditTimelineDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "ResultsSummary",
       "category": "data",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/data/ResultsSummary.tsx",
       "description": "Verification outcome summary panel - grouped check results with overall verdict (DocumentResults, SimpleSummaryResults, TvsPlusResults, AdvisorClient).",
       "useCases": ["results", "summary", "outcome", "verdict", "checks summary", "advisor"],
-      "dependencies": ["StatusBadge", "FieldFeedback"]
+      "dependencies": ["StatusBadge", "FieldFeedback"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/data/ResultsSummary.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ResultsSummaryDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "ProgressIndicator",
       "category": "feedback",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/feedback/ProgressIndicator.tsx",
-      "description": "Determinate progress bar with label/percentage for long-running tasks (WorkingDialog, processing wizard pages).",
-      "useCases": ["progress bar", "progress", "percent", "task progress", "processing"],
-      "dependencies": []
+      "description": "Determinate or indeterminate progress bar with label and optional percentage (WorkingDialog, processing wizard pages).",
+      "useCases": ["progress bar", "progress", "percent", "task progress", "processing", "indeterminate"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/feedback/ProgressIndicator.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ProgressIndicatorDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "PoolPicker",
       "category": "forms",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/forms/PoolPicker.tsx",
-      "description": "Work-pool selection dialog/control (OpenPool, AdvanceSearchOpenPools) with pool counts and descriptions.",
-      "useCases": ["pool", "work pool", "queue picker", "open pool", "assignment"],
-      "dependencies": ["Modal"]
+      "description": "Work-pool selection dialog (OpenPool, AdvanceSearchOpenPools) with pool counts, descriptions and confirm action.",
+      "useCases": ["pool", "work pool", "queue picker", "open pool", "assignment", "select pool"],
+      "dependencies": ["Modal"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/PoolPicker.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/PoolPickerDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "FlexibleFields",
       "category": "forms",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/forms/FlexibleFields.tsx",
-      "description": "Schema-driven dynamic field renderer for per-organisation custom fields (ApplicationFlexibleFields, CustomFields).",
-      "useCases": ["custom fields", "dynamic form", "schema fields", "flexible fields", "org fields"],
-      "dependencies": ["TextField", "SelectField", "DateField", "CheckboxField"]
+      "description": "Schema-driven dynamic field renderer for per-organisation custom fields (ApplicationFlexibleFields, CustomFields). Composes the field primitives.",
+      "useCases": ["custom fields", "dynamic form", "schema fields", "flexible fields", "org fields", "data driven form"],
+      "dependencies": ["TextField", "SelectField", "DateField", "CheckboxField", "TextAreaField"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/FlexibleFields.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/FlexibleFieldsDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "ImageCrop",
       "category": "media",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/media/ImageCrop.tsx",
-      "description": "Drag-to-crop rectangle overlay on a document image (CropImage dialog, ImageCropPage, DocumentImageCrop).",
-      "useCases": ["crop", "image crop", "select region", "cut out", "roi"],
-      "dependencies": []
+      "description": "Drag-to-crop rectangle overlay on a document image; emits the region as percentages (CropImage dialog, ImageCropPage, DocumentImageCrop).",
+      "useCases": ["crop", "image crop", "select region", "cut out", "roi", "drag select"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/media/ImageCrop.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ImageCropDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "FaceMatchView",
       "category": "media",
-      "status": "planned",
+      "status": "ready",
       "path": "src/blocks/media/FaceMatchView.tsx",
-      "description": "Face-image comparison with similarity score and zoom-in detail (FaceMatchPage, UKDLFacePage, FaceMatchZoomIn).",
-      "useCases": ["face match", "facial comparison", "selfie vs chip", "similarity", "zoom in face"],
-      "dependencies": ["ImageCompare"]
+      "description": "Face-image comparison with similarity score bar, threshold colouring and zoom action (FaceMatchPage, UKDLFacePage, FaceMatchZoomIn).",
+      "useCases": ["face match", "facial comparison", "selfie vs chip", "similarity", "zoom in face", "biometric"],
+      "dependencies": ["ImageCompare"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/media/FaceMatchView.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/FaceMatchViewDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     }
   ]
 }
