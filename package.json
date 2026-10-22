@@ -1,0 +1,26 @@
+{
+  "name": "@trustid/design-system",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "TrustID UI block registry - copyable, presentation-only React blocks for the VeriScan web rewrite.",
+  "scripts": {
+    "dev": "node node_modules/vite/bin/vite.js",
+    "build": "node node_modules/typescript/bin/tsc -b && node node_modules/vite/bin/vite.js build",
+    "preview": "node node_modules/vite/bin/vite.js preview"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "daisyui": "^5.7.50",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~5.9.3",
+    "vite": "8.3.4"
+  }
+}

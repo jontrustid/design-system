@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "trustid";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* TrustID blues/greens (placeholder palette, refine later) */
+  --color-base-100: #f5f8fb;
+  --color-base-200: #e7eef4;
+  --color-base-300: #d0dce6;
+  --color-base-content: #182430;
+  --color-primary: #14679e;
+  --color-primary-content: #ecf5fb;
+  --color-secondary: #178570;
+  --color-secondary-content: #e9f8f3;
+  --color-accent: #2fa463;
+  --color-accent-content: #ebf9f1;
+  --color-neutral: #2b3a49;
+  --color-neutral-content: #dde6ee;
+  --color-info: #2a86c5;
+  --color-info-content: #e9f3fb;
+  --color-success: #1e8e5a;
+  --color-success-content: #e8f7ef;
+  --color-warning: #c98a12;
+  --color-warning-content: #fdf3de;
+  --color-error: #c43d3d;
+  --color-error-content: #fdeeee;
+
+  --radius-selector: 0.25rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
