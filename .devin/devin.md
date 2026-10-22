@@ -28,7 +28,9 @@ copyable source (shadcn-style), not a published package.
   onto the root element.
 - Conditional classes use a local `cx(...)` helper kept inside the block file
   (blocks must remain self-contained for drop-in copying — no shared util
-  imports outside `dependencies`).
+  imports outside `dependencies`). `cx` concatenates rather than resolving
+  conflicts (no tailwind-merge): don't rely on a consumer `className`
+  overriding the block's own structural classes.
 - Interactive elements must be keyboard-usable: focusable (`tabIndex`),
   Enter/Space handlers where applicable, and `aria-selected`/`aria-current`/
   `aria-pressed`/`aria-label` as appropriate.

@@ -97,6 +97,12 @@ Tailwind + daisyUI). They use daisyUI semantic classes only (`btn`, `card`,
 theme the host app defines — ideally the `veriscan` theme from `src/index.css`.
 No hard-coded hex colours are allowed, which keeps this true.
 
+Known limitation: `className` merging is plain concatenation (no
+`tailwind-merge`), so passing a class that conflicts with a block's own
+structural classes (e.g. `w-full` vs `max-w-sm`) yields both classes rather
+than an override. To restyle a block's layout, wrap it in a parent element
+— or edit your copy of the block, which is the point of copyable source.
+
 ## Importing designs (Figma → registry)
 
 To update the registry from a design: copy HTML/CSS from Figma Dev Mode

@@ -42,7 +42,22 @@ const GROUPS: TokenGroup[] = [
   },
 ];
 
-const ALL_TOKENS = GROUPS.flatMap((g) => g.swatches.map((s) => s.token));
+const RADIUS_TOKENS = ['--radius-selector', '--radius-field', '--radius-box'];
+
+const TYPE_SCALE = [
+  { cls: 'text-xs', label: 'text-xs' },
+  { cls: 'text-sm', label: 'text-sm' },
+  { cls: 'text-base', label: 'text-base' },
+  { cls: 'text-lg', label: 'text-lg' },
+  { cls: 'text-xl', label: 'text-xl' },
+  { cls: 'text-2xl', label: 'text-2xl' },
+  { cls: 'text-3xl', label: 'text-3xl' },
+];
+
+const ALL_TOKENS = [
+  ...GROUPS.flatMap((g) => g.swatches.map((s) => s.token)),
+  ...RADIUS_TOKENS,
+];
 
 export default function ThemeSection({ theme }: { theme: string }) {
   const [values, setValues] = useState<Record<string, string>>({});
@@ -95,6 +110,44 @@ export default function ThemeSection({ theme }: { theme: string }) {
           </div>
         </div>
       ))}
+
+      <div className="flex flex-col gap-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-base-content/50">
+          Radius
+        </h3>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+          {RADIUS_TOKENS.map((token) => (
+            <div key={token} className="overflow-hidden rounded-box border border-base-300 bg-base-100">
+              <div className="flex h-16 items-center justify-center bg-base-200/60">
+                <div
+                  className="h-10 w-16 border-2 border-primary bg-primary/10"
+                  style={{ borderRadius: `var(${token})` }}
+                />
+              </div>
+              <div className="px-2 py-1.5">
+                <p className="truncate font-mono text-xs">{token.replace('--radius-', '')}</p>
+                <p className="font-mono text-xs text-base-content/50">
+                  {values[token] ?? '...'}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-base-content/50">
+          Type scale
+        </h3>
+        <div className="rounded-box border border-base-300 bg-base-100 p-4">
+          {TYPE_SCALE.map((t) => (
+            <div key={t.cls} className="flex items-baseline gap-4 border-b border-base-200 py-1 last:border-0">
+              <code className="w-20 shrink-0 text-xs text-base-content/50">{t.label}</code>
+              <span className={t.cls}>The quick brown fox</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

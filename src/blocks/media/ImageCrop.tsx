@@ -1,5 +1,9 @@
 import { useRef, useState } from 'react';
-import type { ComponentPropsWithRef, PointerEvent as ReactPointerEvent } from 'react';
+import type {
+  ComponentPropsWithRef,
+  KeyboardEvent as ReactKeyboardEvent,
+  PointerEvent as ReactPointerEvent,
+} from 'react';
 
 /** Crop rectangle as percentages (0-100) of the image bounds. */
 export interface CropRect {
@@ -77,14 +81,44 @@ export default function ImageCrop({
     setRect((r) => (r && (r.width < MIN_SIZE || r.height < MIN_SIZE) ? undefined : r));
   }
 
+  function handleKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape' && rect) {
+      update(undefined);
+      return;
+    }
+    const dx = event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowRight' ? 1 : 0;
+    const dy = event.key === 'ArrowUp' ? -1 : event.key === 'ArrowDown' ? 1 : 0;
+    if (dx === 0 && dy === 0) return;
+    event.preventDefault();
+    const step = event.altKey ? 10 : 1;
+    const current = rect ?? { x: 10, y: 10, width: 80, height: 80 };
+    if (event.shiftKey) {
+      update({
+        ...current,
+        width: clamp(current.width + dx * step, MIN_SIZE, 100 - current.x),
+        height: clamp(current.height + dy * step, MIN_SIZE, 100 - current.y),
+      });
+    } else {
+      update({
+        ...current,
+        x: clamp(current.x + dx * step, 0, 100 - current.width),
+        y: clamp(current.y + dy * step, 0, 100 - current.height),
+      });
+    }
+  }
+
   return (
     <div ref={ref} {...rest} className={cx('flex flex-col gap-2', className)}>
       <div
         ref={containerRef}
-        className="relative inline-block touch-none select-none overflow-hidden rounded-box bg-neutral"
+        tabIndex={0}
+        role="application"
+        aria-label="Crop region. Arrow keys move, Shift plus arrow keys resize, Escape clears."
+        className="relative inline-block touch-none select-none overflow-hidden rounded-box bg-neutral focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onKeyDown={handleKeyDown}
       >
         <img src={src} alt={alt} className="block max-h-96 w-full object-contain" draggable={false} />
         {rect && (
@@ -109,7 +143,7 @@ export default function ImageCrop({
       <p className="text-xs text-base-content/50">
         {rect
           ? `x ${Math.round(rect.x)}%, y ${Math.round(rect.y)}% - ${Math.round(rect.width)}% x ${Math.round(rect.height)}%`
-          : 'Drag on the image to select a region'}
+          : 'Drag on the image to select a region (or use arrow keys)'}
       </p>
     </div>
   );
