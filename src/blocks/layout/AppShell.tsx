@@ -135,7 +135,7 @@ export default function AppShell({
           aria-label="Close navigation"
         />
         <aside className="flex min-h-full w-64 flex-col bg-base-100">
-          <div className="border-b border-base-300 p-4">
+          <div className="flex min-h-16 flex-col justify-center border-b border-base-300 px-4">
             <span className="text-lg font-semibold text-primary">{appName}</span>
             <p className="text-xs text-base-content/60">Document verification</p>
           </div>
