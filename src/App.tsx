@@ -1,6 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { catalogue } from './registry/catalogue';
 import type { CatalogueEntry } from './registry/catalogue';
+import ThemeSection from './theme/ThemeSection';
+
+const THEMES = ['trustid', 'trustid-dark'] as const;
+type Theme = (typeof THEMES)[number];
 
 function BlockCard({ entry }: { entry: CatalogueEntry }) {
   const [showSource, setShowSource] = useState(false);
@@ -98,6 +102,14 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
 
 export default function App() {
   const [query, setQuery] = useState('');
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem('theme') as Theme) || 'trustid',
+  );
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -137,11 +149,30 @@ export default function App() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        <label className="label cursor-pointer gap-2">
+          <span className="label-text text-xs">Dark</span>
+          <input
+            type="checkbox"
+            className="toggle toggle-sm"
+            checked={theme === 'trustid-dark'}
+            onChange={(e) => setTheme(e.target.checked ? 'trustid-dark' : 'trustid')}
+          />
+        </label>
       </header>
 
       <div className="mx-auto flex max-w-6xl">
         <aside className="sticky top-16 hidden h-[calc(100dvh-4rem)] w-60 shrink-0 overflow-y-auto border-r border-base-300 bg-base-100 p-3 lg:block">
           <ul className="menu menu-sm w-full">
+            <li>
+              <span className="menu-title uppercase">Foundation</span>
+              <ul>
+                <li>
+                  <a href="#theme-tokens">
+                    <span className="flex-1 truncate">Theme tokens</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
             {grouped.map(([category, entries]) => (
               <li key={category}>
                 <span className="menu-title uppercase">{category}</span>
@@ -166,6 +197,7 @@ export default function App() {
         </aside>
 
         <main className="flex min-w-0 flex-1 flex-col gap-10 p-4 sm:p-6">
+          <ThemeSection theme={theme} />
           {grouped.map(([category, entries]) => (
             <section key={category} className="flex flex-col gap-4">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-base-content/60">
