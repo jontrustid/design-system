@@ -4,10 +4,14 @@ import type { CatalogueEntry } from './registry/catalogue';
 
 function BlockCard({ entry }: { entry: CatalogueEntry }) {
   const [showSource, setShowSource] = useState(false);
+  const [activeTab, setActiveTab] = useState('component');
   const [copied, setCopied] = useState(false);
 
+  const active =
+    entry.artifacts.find((a) => a.id === activeTab) ?? entry.artifacts[0];
+
   async function copySource() {
-    await navigator.clipboard.writeText(entry.source);
+    await navigator.clipboard.writeText(active.source);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   }
@@ -37,26 +41,44 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
               {uc}
             </span>
           ))}
-          <div className="ms-auto flex gap-2">
-            {showSource && (
-              <button type="button" className="btn btn-ghost btn-sm" onClick={copySource}>
-                {copied ? 'Copied' : 'Copy'}
-              </button>
-            )}
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              onClick={() => setShowSource((s) => !s)}
-            >
-              {showSource ? 'Hide source' : 'View source'}
-            </button>
-          </div>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm ms-auto"
+            onClick={() => setShowSource((s) => !s)}
+          >
+            {showSource ? 'Hide source' : 'View source'}
+          </button>
         </div>
 
         {showSource && (
-          <pre className="max-h-96 overflow-auto rounded-box bg-neutral p-4 text-xs text-neutral-content">
-            <code>{entry.source}</code>
-          </pre>
+          <div className="overflow-hidden rounded-box border border-base-300">
+            <div role="tablist" className="tabs tabs-box flex-nowrap rounded-none bg-base-200">
+              {entry.artifacts.map((artifact) => (
+                <button
+                  key={artifact.id}
+                  type="button"
+                  role="tab"
+                  className={`tab ${artifact.id === active.id ? 'tab-active' : ''}`}
+                  onClick={() => {
+                    setActiveTab(artifact.id);
+                    setCopied(false);
+                  }}
+                >
+                  {artifact.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm ms-auto self-center"
+                onClick={copySource}
+              >
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+            <pre className="max-h-96 overflow-auto bg-neutral p-4 text-xs text-neutral-content">
+              <code>{active.source}</code>
+            </pre>
+          </div>
         )}
       </div>
     </section>

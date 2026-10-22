@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "blocks": [
     {
       "name": "LoginForm",
@@ -7,7 +7,12 @@
       "path": "src/blocks/forms/LoginForm.tsx",
       "description": "Sign-in card with environment picker, username/password and an optional MFA one-time-code variant. Presentation-only; emits values via onSubmit.",
       "useCases": ["login", "sign in", "authentication", "mfa", "credentials", "environment picker", "session start"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/LoginForm.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/LoginFormDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "DocumentFieldsForm",
@@ -15,7 +20,12 @@
       "path": "src/blocks/forms/DocumentFieldsForm.tsx",
       "description": "Editable grid of OCR-extracted document fields. Fields below a confidence threshold are flagged for operator review; confirm emits corrected values.",
       "useCases": ["form", "data entry", "ocr", "extracted fields", "document fields", "field review", "confidence", "confirm extraction", "edit fields"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/DocumentFieldsForm.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/DocumentFieldsFormDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "SearchFilterBar",
@@ -23,7 +33,12 @@
       "path": "src/blocks/forms/SearchFilterBar.tsx",
       "description": "Search box plus configurable filters (select/text/date) with Apply and Clear actions for queue lookups.",
       "useCases": ["search", "filter", "filter bar", "queue search", "criteria", "lookup", "find applications"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/SearchFilterBar.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/SearchFilterBarDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "ApplicationsTable",
@@ -31,7 +46,12 @@
       "path": "src/blocks/data/ApplicationsTable.tsx",
       "description": "Inbox queue table: applicant, document type, status badge, pool, locked-by and received date. Single click selects, double click opens.",
       "useCases": ["table", "inbox", "queue", "work queue", "list", "applications", "data grid", "selectable rows", "double click open"],
-      "dependencies": ["StatusBadge"]
+      "dependencies": ["StatusBadge"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/data/ApplicationsTable.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ApplicationsTableDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "StatusBadge",
@@ -39,7 +59,12 @@
       "path": "src/blocks/feedback/StatusBadge.tsx",
       "description": "Coloured badge for the application lifecycle: pending, in-review, verified, rejected, referred, on-hold, completed, failed.",
       "useCases": ["badge", "status", "status badge", "pill", "state indicator", "application status", "chip"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/feedback/StatusBadge.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/StatusBadgeDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "FieldFeedback",
@@ -47,7 +72,12 @@
       "path": "src/blocks/feedback/FieldFeedback.tsx",
       "description": "Expandable list of field-level check results (pass/info/warning/fail) with summary message and optional detail text.",
       "useCases": ["feedback", "validation results", "checks", "expandable list", "errors", "warnings", "check results", "accordion", "verification results"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/feedback/FieldFeedback.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/FieldFeedbackDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "WizardStepper",
@@ -55,7 +85,12 @@
       "path": "src/blocks/navigation/WizardStepper.tsx",
       "description": "Horizontal steps bar with back/next controls, optional-step hints and click-to-revisit completed steps.",
       "useCases": ["wizard", "steps", "stepper", "multi-step", "progress", "back next", "workflow", "onboarding"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/navigation/WizardStepper.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/WizardStepperDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "ImageViewer",
@@ -63,7 +98,12 @@
       "path": "src/blocks/media/ImageViewer.tsx",
       "description": "Document image viewer with colour/IR/UV channel switching, zoom, rotate and optional side-by-side reference comparison.",
       "useCases": ["image", "viewer", "document image", "zoom", "rotate", "ir", "uv", "channels", "side by side", "comparison", "scan preview"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/media/ImageViewer.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ImageViewerDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     },
     {
       "name": "AppShell",
@@ -71,7 +111,12 @@
       "path": "src/blocks/layout/AppShell.tsx",
       "description": "Application frame: role-filtered drawer sidebar, top bar with org badge and user account menu. Wraps page content.",
       "useCases": ["layout", "shell", "app shell", "sidebar", "navigation", "navbar", "dashboard layout", "scaffold", "menu", "page frame"],
-      "dependencies": []
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/layout/AppShell.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/AppShellDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
     }
   ]
 }
