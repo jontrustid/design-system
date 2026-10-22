@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ReactNode } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 
 export interface NavItem {
   id: string;
@@ -16,7 +16,7 @@ export interface ShellUser {
   org: string;
 }
 
-export interface AppShellProps {
+export interface AppShellProps extends ComponentPropsWithRef<'div'> {
   appName?: string;
   navItems: NavItem[];
   activeNavId?: string;
@@ -27,6 +27,10 @@ export interface AppShellProps {
   children?: ReactNode;
 }
 
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function AppShell({
   appName = 'VeriScan',
   navItems,
@@ -35,6 +39,9 @@ export default function AppShell({
   onNavigate,
   onSignOut,
   children,
+  className,
+  ref,
+  ...rest
 }: AppShellProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const visibleItems = navItems.filter(
@@ -49,7 +56,15 @@ export default function AppShell({
     .toUpperCase();
 
   return (
-    <div className={`drawer h-full min-h-0 ${drawerOpen ? 'drawer-open' : ''} lg:drawer-open`}>
+    <div
+      ref={ref}
+      {...rest}
+      className={cx(
+        'drawer h-full min-h-0 lg:drawer-open',
+        drawerOpen && 'drawer-open',
+        className,
+      )}
+    >
       <input
         id="app-shell-drawer"
         type="checkbox"
@@ -124,23 +139,26 @@ export default function AppShell({
             <span className="text-lg font-semibold text-primary">{appName}</span>
             <p className="text-xs text-base-content/60">Document verification</p>
           </div>
-          <ul className="menu flex-1 gap-1 p-3">
-            {visibleItems.map((item) => (
-              <li key={item.id}>
-                <a
-                  className={item.id === activeNavId ? 'menu-active' : ''}
-                  onClick={() => {
-                    onNavigate?.(item.id);
-                    setDrawerOpen(false);
-                  }}
-                >
-                  {item.icon}
-                  <span className="flex-1">{item.label}</span>
-                  {item.badge && <span className="badge badge-sm">{item.badge}</span>}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <nav className="flex-1 overflow-y-auto">
+            <ul className="menu gap-1 p-3">
+              {visibleItems.map((item) => (
+                <li key={item.id}>
+                  <a
+                    className={item.id === activeNavId ? 'menu-active' : undefined}
+                    aria-current={item.id === activeNavId ? 'page' : undefined}
+                    onClick={() => {
+                      onNavigate?.(item.id);
+                      setDrawerOpen(false);
+                    }}
+                  >
+                    {item.icon}
+                    <span className="flex-1">{item.label}</span>
+                    {item.badge && <span className="badge badge-sm">{item.badge}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </aside>
       </div>
     </div>

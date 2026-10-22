@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
 export interface ImageChannel {
   id: string;
@@ -6,7 +7,7 @@ export interface ImageChannel {
   src: string;
 }
 
-export interface ImageViewerProps {
+export interface ImageViewerProps extends ComponentPropsWithRef<'div'> {
   /** Imaging channels captured by the scanner, e.g. colour / IR / UV. */
   channels: ImageChannel[];
   /** Reference image (e.g. template or previous capture) for side-by-side compare. */
@@ -17,11 +18,18 @@ export interface ImageViewerProps {
 
 const ZOOM_STEPS = [0.5, 0.75, 1, 1.5, 2, 3, 4];
 
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function ImageViewer({
   channels,
   referenceSrc,
   referenceLabel = 'Reference',
   initialChannelId,
+  className,
+  ref,
+  ...rest
 }: ImageViewerProps) {
   const [channelId, setChannelId] = useState(initialChannelId ?? channels[0]?.id);
   const [zoomIndex, setZoomIndex] = useState(ZOOM_STEPS.indexOf(1));
@@ -62,14 +70,15 @@ export default function ImageViewer({
   }
 
   return (
-    <div className="flex w-full flex-col gap-3">
+    <div ref={ref} {...rest} className={cx('flex w-full flex-col gap-3', className)}>
       <div className="flex flex-wrap items-center gap-3 rounded-box border border-base-300 bg-base-100 p-2">
-        <div className="join">
+        <div className="join" role="group" aria-label="Image channel">
           {channels.map((c) => (
             <button
               key={c.id}
               type="button"
-              className={`btn btn-sm join-item ${c.id === channel?.id ? 'btn-primary' : ''}`}
+              aria-pressed={c.id === channel?.id}
+              className={cx('btn btn-sm join-item', c.id === channel?.id && 'btn-primary')}
               onClick={() => setChannelId(c.id)}
             >
               {c.label}
@@ -77,7 +86,7 @@ export default function ImageViewer({
           ))}
         </div>
 
-        <div className="join">
+        <div className="join" role="group" aria-label="Zoom">
           <button
             type="button"
             className="btn btn-sm join-item"

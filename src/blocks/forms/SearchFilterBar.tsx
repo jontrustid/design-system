@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
 export interface SearchFilterOption {
   value: string;
@@ -14,7 +15,7 @@ export interface SearchFilter {
   placeholder?: string;
 }
 
-export interface SearchFilterBarProps {
+export interface SearchFilterBarProps extends ComponentPropsWithRef<'div'> {
   filters: SearchFilter[];
   searchPlaceholder?: string;
   /** Fired with the query plus every filter value when Apply is clicked. */
@@ -22,11 +23,18 @@ export interface SearchFilterBarProps {
   onClear?: () => void;
 }
 
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function SearchFilterBar({
   filters,
   searchPlaceholder = 'Search applications...',
   onApply,
   onClear,
+  className,
+  ref,
+  ...rest
 }: SearchFilterBarProps) {
   const [query, setQuery] = useState('');
   const [values, setValues] = useState<Record<string, string>>({});
@@ -42,7 +50,14 @@ export default function SearchFilterBar({
   }
 
   return (
-    <div className="flex w-full flex-wrap items-end gap-3 rounded-box border border-base-300 bg-base-100 p-4">
+    <div
+      ref={ref}
+      {...rest}
+      className={cx(
+        'flex w-full flex-wrap items-end gap-3 rounded-box border border-base-300 bg-base-100 p-4',
+        className,
+      )}
+    >
       <fieldset className="fieldset min-w-52 flex-1">
         <legend className="fieldset-legend">Search</legend>
         <input

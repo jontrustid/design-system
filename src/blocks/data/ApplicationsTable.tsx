@@ -1,3 +1,4 @@
+import type { ComponentPropsWithRef, KeyboardEvent } from 'react';
 import StatusBadge from '../feedback/StatusBadge';
 import type { ApplicationStatus } from '../feedback/StatusBadge';
 
@@ -12,13 +13,18 @@ export interface ApplicationRow {
   receivedAt: string;
 }
 
-export interface ApplicationsTableProps {
+export interface ApplicationsTableProps
+  extends Omit<ComponentPropsWithRef<'div'>, 'onSelect'> {
   rows: ApplicationRow[];
   selectedId?: string;
-  /** Single click on a row. */
+  /** Click or Space on a row. */
   onSelect?: (row: ApplicationRow) => void;
-  /** Double click on a row (open the application). */
+  /** Double-click or Enter on a row (open the application). */
   onOpen?: (row: ApplicationRow) => void;
+}
+
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
 }
 
 function LockIcon() {
@@ -44,9 +50,29 @@ export default function ApplicationsTable({
   selectedId,
   onSelect,
   onOpen,
+  className,
+  ref,
+  ...rest
 }: ApplicationsTableProps) {
+  function handleRowKeyDown(event: KeyboardEvent<HTMLTableRowElement>, row: ApplicationRow) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      onOpen?.(row);
+    } else if (event.key === ' ') {
+      event.preventDefault();
+      onSelect?.(row);
+    }
+  }
+
   return (
-    <div className="overflow-x-auto rounded-box border border-base-300 bg-base-100">
+    <div
+      ref={ref}
+      {...rest}
+      className={cx(
+        'overflow-x-auto rounded-box border border-base-300 bg-base-100',
+        className,
+      )}
+    >
       <table className="table table-zebra">
         <thead>
           <tr>
@@ -62,9 +88,15 @@ export default function ApplicationsTable({
           {rows.map((row) => (
             <tr
               key={row.id}
-              className={`cursor-pointer ${row.id === selectedId ? 'bg-primary/10' : ''}`}
+              tabIndex={0}
+              aria-selected={row.id === selectedId}
+              className={cx(
+                'cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary',
+                row.id === selectedId && 'bg-primary/10',
+              )}
               onClick={() => onSelect?.(row)}
               onDoubleClick={() => onOpen?.(row)}
+              onKeyDown={(e) => handleRowKeyDown(e, row)}
             >
               <td className="font-medium">{row.applicant}</td>
               <td>{row.documentType}</td>

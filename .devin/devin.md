@@ -21,6 +21,17 @@ copyable source (shadcn-style), not a published package.
   `steps`, `drawer`, `input`, `select`, `fieldset`...). **No hard-coded hex
   colours or inline colour styles** — blocks must work under any daisyUI
   theme. Opacity modifiers like `bg-primary/10` are fine.
+- `<BlockName>Props` extends the root element's props via
+  `ComponentPropsWithRef<'el'>` (`Omit` any prop-name clashes, e.g.
+  `onSubmit`/`onSelect`/`onReset`). Destructure `className`/`ref`, merge
+  `className` into the root classes (consumer classes last), spread `...rest`
+  onto the root element.
+- Conditional classes use a local `cx(...)` helper kept inside the block file
+  (blocks must remain self-contained for drop-in copying — no shared util
+  imports outside `dependencies`).
+- Interactive elements must be keyboard-usable: focusable (`tabIndex`),
+  Enter/Space handlers where applicable, and `aria-selected`/`aria-current`/
+  `aria-pressed`/`aria-label` as appropriate.
 - Blocks may import other blocks via relative paths; record every such import
   in the block's `dependencies` in `blocks.json` (by block `name`).
 

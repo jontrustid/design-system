@@ -1,3 +1,5 @@
+import type { ComponentPropsWithRef } from 'react';
+
 export type FeedbackSeverity = 'pass' | 'info' | 'warning' | 'fail';
 
 export interface FieldFeedbackItem {
@@ -9,7 +11,7 @@ export interface FieldFeedbackItem {
   details?: string;
 }
 
-export interface FieldFeedbackProps {
+export interface FieldFeedbackProps extends ComponentPropsWithRef<'div'> {
   items: FieldFeedbackItem[];
   /** id of the item to render expanded on first paint. */
   defaultExpandedId?: string;
@@ -26,9 +28,19 @@ const SEVERITY_STYLES: Record<FeedbackSeverity, { badge: string; label: string; 
   fail: { badge: 'badge-error', label: 'Fail', icon: 'M6 18L18 6M6 6l12 12' },
 };
 
-export default function FieldFeedback({ items, defaultExpandedId }: FieldFeedbackProps) {
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
+export default function FieldFeedback({
+  items,
+  defaultExpandedId,
+  className,
+  ref,
+  ...rest
+}: FieldFeedbackProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <div ref={ref} {...rest} className={cx('flex flex-col gap-2', className)}>
       {items.map((item) => {
         const style = SEVERITY_STYLES[item.severity];
         return (
@@ -51,7 +63,7 @@ export default function FieldFeedback({ items, defaultExpandedId }: FieldFeedbac
                 <path d={style.icon} />
               </svg>
               <span className="flex-1 font-medium">{item.label}</span>
-              <span className={`badge badge-sm ${style.badge}`}>{style.label}</span>
+              <span className={cx('badge badge-sm', style.badge)}>{style.label}</span>
             </div>
             <div className="collapse-content text-sm">
               <p>{item.message}</p>

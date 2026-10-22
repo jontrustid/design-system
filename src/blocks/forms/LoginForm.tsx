@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { FormEvent } from 'react';
+import type { ComponentPropsWithRef, FormEvent } from 'react';
 
 export interface LoginEnvironment {
   id: string;
@@ -13,7 +13,7 @@ export interface LoginFormValues {
   mfaCode: string;
 }
 
-export interface LoginFormProps {
+export interface LoginFormProps extends Omit<ComponentPropsWithRef<'form'>, 'onSubmit'> {
   environments: LoginEnvironment[];
   /** Show the one-time code field (second auth step). */
   requireMfa?: boolean;
@@ -23,12 +23,19 @@ export interface LoginFormProps {
   onSubmit?: (values: LoginFormValues) => void;
 }
 
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function LoginForm({
   environments,
   requireMfa = false,
   loading = false,
   error,
   onSubmit,
+  className,
+  ref,
+  ...rest
 }: LoginFormProps) {
   const [environment, setEnvironment] = useState(environments[0]?.id ?? '');
   const [username, setUsername] = useState('');
@@ -41,7 +48,12 @@ export default function LoginForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card w-full max-w-sm bg-base-100 shadow-md">
+    <form
+      ref={ref}
+      {...rest}
+      onSubmit={handleSubmit}
+      className={cx('card w-full max-w-sm bg-base-100 shadow-md', className)}
+    >
       <div className="card-body gap-4">
         <h2 className="card-title">Sign in to VeriScan</h2>
 

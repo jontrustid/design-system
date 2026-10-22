@@ -100,6 +100,15 @@ No hard-coded hex colours are allowed, which keeps this true.
    - daisyUI semantic classes only — no hard-coded hex/inline colour styles
    - export shared types (e.g. `ApplicationStatus`) so other blocks can
      depend on them
+   - `<BlockName>Props` extends the root element's props
+     (`ComponentPropsWithRef<'div'>` etc., with `Omit` for name clashes):
+     destructure `className`/`ref`, merge `className` into the root's classes
+     (consumer classes last), and spread `...rest` onto the root so callers
+     can pass `data-*`, `aria-*`, ids and refs
+   - a local `cx(...classes)` helper is used for conditional classes —
+     keep it in-file so blocks stay self-contained
+   - interactive elements must be keyboard-usable (focusable, Enter/Space
+     handlers, `aria-selected`/`aria-current`/`aria-pressed` as appropriate)
 2. Create `src/registry/demos/<BlockName>Demo.tsx` — a default-exported
    component that mounts the block with realistic fixtures and callback
    handlers (this is both the live preview and the `usage`/`html` artifacts).

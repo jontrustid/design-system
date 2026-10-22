@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 
 export interface DocumentField {
   key: string;
@@ -9,7 +10,8 @@ export interface DocumentField {
   type?: 'text' | 'date' | 'number';
 }
 
-export interface DocumentFieldsFormProps {
+export interface DocumentFieldsFormProps
+  extends Omit<ComponentPropsWithRef<'div'>, 'onReset'> {
   fields: DocumentField[];
   /** Fields scoring below this are highlighted for operator review. */
   confidenceThreshold?: number;
@@ -17,11 +19,18 @@ export interface DocumentFieldsFormProps {
   onReset?: () => void;
 }
 
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function DocumentFieldsForm({
   fields,
   confidenceThreshold = 0.85,
   onConfirm,
   onReset,
+  className,
+  ref,
+  ...rest
 }: DocumentFieldsFormProps) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(fields.map((f) => [f.key, f.value])),
@@ -39,7 +48,11 @@ export default function DocumentFieldsForm({
   const flaggedCount = fields.filter((f) => f.confidence < confidenceThreshold).length;
 
   return (
-    <div className="card w-full max-w-2xl bg-base-100 shadow-md">
+    <div
+      ref={ref}
+      {...rest}
+      className={cx('card w-full max-w-2xl bg-base-100 shadow-md', className)}
+    >
       <div className="card-body gap-4">
         <div className="flex items-center justify-between">
           <h2 className="card-title">Extracted fields</h2>
@@ -63,7 +76,7 @@ export default function DocumentFieldsForm({
                 </legend>
                 <input
                   type={field.type === 'date' ? 'date' : field.type === 'number' ? 'number' : 'text'}
-                  className={`input w-full ${lowConfidence ? 'input-warning' : ''}`}
+                  className={cx('input w-full', lowConfidence && 'input-warning')}
                   value={values[field.key] ?? ''}
                   onChange={(e) =>
                     setValues((v) => ({ ...v, [field.key]: e.target.value }))

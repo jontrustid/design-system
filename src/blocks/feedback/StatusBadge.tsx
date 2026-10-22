@@ -1,3 +1,5 @@
+import type { ComponentPropsWithRef } from 'react';
+
 export type ApplicationStatus =
   | 'pending'
   | 'in-review'
@@ -8,7 +10,7 @@ export type ApplicationStatus =
   | 'completed'
   | 'failed';
 
-export interface StatusBadgeProps {
+export interface StatusBadgeProps extends ComponentPropsWithRef<'span'> {
   status: ApplicationStatus;
   size?: 'xs' | 'sm' | 'md' | 'lg';
 }
@@ -24,8 +26,26 @@ const STATUS_STYLES: Record<ApplicationStatus, { className: string; label: strin
   failed: { className: 'badge-error badge-outline', label: 'Failed' },
 };
 
-export default function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
-  const { className, label } = STATUS_STYLES[status];
-  const sizeClass = size === 'md' ? '' : `badge-${size}`;
-  return <span className={`badge ${className} ${sizeClass}`.trim()}>{label}</span>;
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
+export default function StatusBadge({
+  status,
+  size = 'md',
+  className,
+  children,
+  ref,
+  ...rest
+}: StatusBadgeProps) {
+  const style = STATUS_STYLES[status];
+  return (
+    <span
+      ref={ref}
+      {...rest}
+      className={cx('badge', style.className, size !== 'md' && `badge-${size}`, className)}
+    >
+      {children ?? style.label}
+    </span>
+  );
 }

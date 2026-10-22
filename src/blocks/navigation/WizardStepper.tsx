@@ -1,3 +1,5 @@
+import type { ComponentPropsWithRef } from 'react';
+
 export interface WizardStep {
   id: string;
   label: string;
@@ -5,7 +7,7 @@ export interface WizardStep {
   optional?: boolean;
 }
 
-export interface WizardStepperProps {
+export interface WizardStepperProps extends ComponentPropsWithRef<'div'> {
   steps: WizardStep[];
   currentIndex: number;
   onBack?: () => void;
@@ -18,6 +20,10 @@ export interface WizardStepperProps {
   nextDisabled?: boolean;
 }
 
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ');
+}
+
 export default function WizardStepper({
   steps,
   currentIndex,
@@ -28,12 +34,15 @@ export default function WizardStepper({
   nextLabel = 'Next',
   backDisabled,
   nextDisabled,
+  className,
+  ref,
+  ...rest
 }: WizardStepperProps) {
   const isFirst = currentIndex <= 0;
   const isLast = currentIndex >= steps.length - 1;
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div ref={ref} {...rest} className={cx('flex w-full flex-col gap-6', className)}>
       <ul className="steps w-full">
         {steps.map((step, index) => {
           const reached = index <= currentIndex;
@@ -41,7 +50,8 @@ export default function WizardStepper({
           return (
             <li
               key={step.id}
-              className={`step ${reached ? 'step-primary' : ''} ${clickable ? 'cursor-pointer' : ''}`}
+              aria-current={index === currentIndex ? 'step' : undefined}
+              className={cx('step', reached && 'step-primary', clickable && 'cursor-pointer')}
               onClick={clickable ? () => onStepClick(index) : undefined}
             >
               <span className="mt-1 inline-flex items-baseline gap-1.5">
