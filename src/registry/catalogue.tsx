@@ -14,11 +14,12 @@ interface RegistryArtifact {
 interface RegistryBlock {
   name: string;
   category: string;
+  status: 'ready' | 'planned';
   path: string;
   description: string;
   useCases: string[];
   dependencies: string[];
-  artifacts: RegistryArtifact[];
+  artifacts?: RegistryArtifact[];
 }
 
 export interface SourceArtifact {
@@ -30,6 +31,7 @@ export interface SourceArtifact {
 export interface CatalogueEntry {
   name: string;
   category: string;
+  status: 'ready' | 'planned';
   path: string;
   description: string;
   useCases: string[];
@@ -114,7 +116,8 @@ function renderedHtml(demo: ReactElement): string {
 const blocks = registry.blocks as RegistryBlock[];
 
 export const catalogue: CatalogueEntry[] = blocks.map((block) => {
-  const usageArtifact = block.artifacts.find((a) => a.id === 'usage');
+  const registryArtifacts = block.artifacts ?? [];
+  const usageArtifact = registryArtifacts.find((a) => a.id === 'usage');
   const demoPath =
     usageArtifact?.path ?? `src/registry/demos/${block.name}Demo.tsx`;
   const DemoComponent = demoByRepoPath[demoPath];
@@ -126,7 +129,7 @@ export const catalogue: CatalogueEntry[] = blocks.map((block) => {
     </p>
   );
 
-  const artifacts: SourceArtifact[] = block.artifacts.map((artifact) => ({
+  const artifacts: SourceArtifact[] = registryArtifacts.map((artifact) => ({
     id: artifact.id,
     label: artifact.label,
     source:

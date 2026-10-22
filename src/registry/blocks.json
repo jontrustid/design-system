@@ -1,9 +1,10 @@
 {
-  "version": 2,
+  "version": 3,
   "blocks": [
     {
       "name": "LoginForm",
       "category": "forms",
+      "status": "ready",
       "path": "src/blocks/forms/LoginForm.tsx",
       "description": "Sign-in card with environment picker, username/password and an optional MFA one-time-code variant. Presentation-only; emits values via onSubmit.",
       "useCases": ["login", "sign in", "authentication", "mfa", "credentials", "environment picker", "session start"],
@@ -17,6 +18,7 @@
     {
       "name": "DocumentFieldsForm",
       "category": "forms",
+      "status": "ready",
       "path": "src/blocks/forms/DocumentFieldsForm.tsx",
       "description": "Editable grid of OCR-extracted document fields. Fields below a confidence threshold are flagged for operator review; confirm emits corrected values.",
       "useCases": ["form", "data entry", "ocr", "extracted fields", "document fields", "field review", "confidence", "confirm extraction", "edit fields"],
@@ -30,6 +32,7 @@
     {
       "name": "SearchFilterBar",
       "category": "forms",
+      "status": "ready",
       "path": "src/blocks/forms/SearchFilterBar.tsx",
       "description": "Search box plus configurable filters (select/text/date) with Apply and Clear actions for queue lookups.",
       "useCases": ["search", "filter", "filter bar", "queue search", "criteria", "lookup", "find applications"],
@@ -41,10 +44,109 @@
       ]
     },
     {
+      "name": "TextField",
+      "category": "forms",
+      "status": "ready",
+      "path": "src/blocks/forms/TextField.tsx",
+      "description": "Labelled single-line input (text/email/password/number/search/tel/url) with hint and error message. Core field primitive.",
+      "useCases": ["text input", "field", "input", "form field", "password", "labelled input", "textbox"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/TextField.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/TextFieldDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "SelectField",
+      "category": "forms",
+      "status": "ready",
+      "path": "src/blocks/forms/SelectField.tsx",
+      "description": "Labelled dropdown select with options, placeholder, hint and error. Covers ComboBox usage.",
+      "useCases": ["select", "dropdown", "combobox", "picker", "options", "form field"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/SelectField.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/SelectFieldDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "RadioGroup",
+      "category": "forms",
+      "status": "ready",
+      "path": "src/blocks/forms/RadioGroup.tsx",
+      "description": "Labelled radio option group (horizontal or vertical) with hint/error. Covers the frequent 'question + yes/no' pattern.",
+      "useCases": ["radio", "radio group", "yes no", "choice", "options", "question", "form field"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/RadioGroup.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/RadioGroupDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "CheckboxField",
+      "category": "forms",
+      "status": "ready",
+      "path": "src/blocks/forms/CheckboxField.tsx",
+      "description": "Single labelled checkbox with hint and error. Compose for multi-select groups.",
+      "useCases": ["checkbox", "tick", "confirm", "agree", "form field", "flag"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/CheckboxField.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/CheckboxFieldDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "DateField",
+      "category": "forms",
+      "status": "ready",
+      "path": "src/blocks/forms/DateField.tsx",
+      "description": "Labelled date input with hint and error. Covers DatePicker usage.",
+      "useCases": ["date", "date picker", "datepicker", "calendar", "form field", "dob", "expiry"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/DateField.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/DateFieldDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "TextAreaField",
+      "category": "forms",
+      "status": "ready",
+      "path": "src/blocks/forms/TextAreaField.tsx",
+      "description": "Labelled multi-line text area with hint and error. Used for operator notes.",
+      "useCases": ["textarea", "notes", "multiline", "comments", "form field"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/TextAreaField.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/TextAreaFieldDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "FileUpload",
+      "category": "forms",
+      "status": "ready",
+      "path": "src/blocks/forms/FileUpload.tsx",
+      "description": "Drag-and-drop / click-to-browse file upload zone. Covers CSV import entry points.",
+      "useCases": ["file upload", "drop zone", "drag and drop", "csv import", "browse", "attachment"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/forms/FileUpload.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/FileUploadDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
       "name": "ApplicationsTable",
       "category": "data",
+      "status": "ready",
       "path": "src/blocks/data/ApplicationsTable.tsx",
-      "description": "Inbox queue table: applicant, document type, status badge, pool, locked-by and received date. Single click selects, double click opens.",
+      "description": "Inbox queue table: applicant, document type, status badge, pool, locked-by and received date. Single click selects, double click opens. Keyboard: Space selects, Enter opens.",
       "useCases": ["table", "inbox", "queue", "work queue", "list", "applications", "data grid", "selectable rows", "double click open"],
       "dependencies": ["StatusBadge"],
       "artifacts": [
@@ -54,8 +156,23 @@
       ]
     },
     {
+      "name": "ApplicationCardList",
+      "category": "data",
+      "status": "ready",
+      "path": "src/blocks/data/ApplicationCardList.tsx",
+      "description": "Inbox queue as thumbnail + metadata cards (matches VeriScan's actual inbox item style). Click/double-click and keyboard selectable.",
+      "useCases": ["card list", "inbox", "queue", "thumbnails", "applications", "selectable list", "work queue"],
+      "dependencies": ["StatusBadge"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/data/ApplicationCardList.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ApplicationCardListDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
       "name": "StatusBadge",
       "category": "feedback",
+      "status": "ready",
       "path": "src/blocks/feedback/StatusBadge.tsx",
       "description": "Coloured badge for the application lifecycle: pending, in-review, verified, rejected, referred, on-hold, completed, failed.",
       "useCases": ["badge", "status", "status badge", "pill", "state indicator", "application status", "chip"],
@@ -69,6 +186,7 @@
     {
       "name": "FieldFeedback",
       "category": "feedback",
+      "status": "ready",
       "path": "src/blocks/feedback/FieldFeedback.tsx",
       "description": "Expandable list of field-level check results (pass/info/warning/fail) with summary message and optional detail text.",
       "useCases": ["feedback", "validation results", "checks", "expandable list", "errors", "warnings", "check results", "accordion", "verification results"],
@@ -80,8 +198,51 @@
       ]
     },
     {
+      "name": "Alert",
+      "category": "feedback",
+      "status": "ready",
+      "path": "src/blocks/feedback/Alert.tsx",
+      "description": "Inline alert banner (info/success/warning/error) with icon, title, body and optional dismiss.",
+      "useCases": ["alert", "banner", "notification", "message", "error banner", "warning", "inline message"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/feedback/Alert.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/AlertDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "LoadingSpinner",
+      "category": "feedback",
+      "status": "ready",
+      "path": "src/blocks/feedback/LoadingSpinner.tsx",
+      "description": "Spinner with optional caption; overlay mode dims and covers the parent for in-progress work.",
+      "useCases": ["loading", "spinner", "busy", "progress", "working", "waiting", "overlay"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/feedback/LoadingSpinner.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/LoadingSpinnerDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "EmptyState",
+      "category": "feedback",
+      "status": "ready",
+      "path": "src/blocks/feedback/EmptyState.tsx",
+      "description": "Placeholder panel for empty queues/results with title, message and action slot.",
+      "useCases": ["empty state", "no results", "placeholder", "zero state", "nothing found"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/feedback/EmptyState.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/EmptyStateDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
       "name": "WizardStepper",
       "category": "navigation",
+      "status": "ready",
       "path": "src/blocks/navigation/WizardStepper.tsx",
       "description": "Horizontal steps bar with back/next controls, optional-step hints and click-to-revisit completed steps.",
       "useCases": ["wizard", "steps", "stepper", "multi-step", "progress", "back next", "workflow", "onboarding"],
@@ -93,8 +254,23 @@
       ]
     },
     {
+      "name": "Tabs",
+      "category": "navigation",
+      "status": "ready",
+      "path": "src/blocks/navigation/Tabs.tsx",
+      "description": "Tab strip (box/border/lift variants) with optional badges and disabled tabs. Covers TabControl usage.",
+      "useCases": ["tabs", "tab control", "sections", "tabbed", "switch views"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/navigation/Tabs.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/TabsDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
       "name": "ImageViewer",
       "category": "media",
+      "status": "ready",
       "path": "src/blocks/media/ImageViewer.tsx",
       "description": "Document image viewer with colour/IR/UV channel switching, zoom, rotate and optional side-by-side reference comparison.",
       "useCases": ["image", "viewer", "document image", "zoom", "rotate", "ir", "uv", "channels", "side by side", "comparison", "scan preview"],
@@ -106,8 +282,79 @@
       ]
     },
     {
+      "name": "ImageCompare",
+      "category": "media",
+      "status": "ready",
+      "path": "src/blocks/media/ImageCompare.tsx",
+      "description": "Two labelled images side by side plus a verification question with radio answers - the recurring wizard pattern (colour vs IR, scanned vs reference, face match).",
+      "useCases": ["compare", "side by side", "comparison", "are these the same", "face match", "feature check", "image comparison", "yes no question"],
+      "dependencies": ["RadioGroup"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/media/ImageCompare.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ImageCompareDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "ThumbnailGrid",
+      "category": "media",
+      "status": "ready",
+      "path": "src/blocks/media/ThumbnailGrid.tsx",
+      "description": "Selectable grid of document image thumbnails with labels and channel badges. Click/double-click and keyboard navigation.",
+      "useCases": ["thumbnails", "image grid", "gallery", "document images", "captures", "preview grid"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/media/ThumbnailGrid.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ThumbnailGridDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "MrzDisplay",
+      "category": "media",
+      "status": "ready",
+      "path": "src/blocks/media/MrzDisplay.tsx",
+      "description": "Monospaced MRZ lines with optional character-range highlights (e.g. failing check digits) and index ruler.",
+      "useCases": ["mrz", "machine readable zone", "check digit", "monospace", "document data", "checksum"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/media/MrzDisplay.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/MrzDisplayDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "Modal",
+      "category": "overlay",
+      "status": "ready",
+      "path": "src/blocks/overlay/Modal.tsx",
+      "description": "Controlled dialog with title, content and actions slot. Backdrop click and Escape close. Base for all dialogs.",
+      "useCases": ["modal", "dialog", "popup", "overlay", "window", "prompt"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/overlay/Modal.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ModalDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "ConfirmDialog",
+      "category": "overlay",
+      "status": "ready",
+      "path": "src/blocks/overlay/ConfirmDialog.tsx",
+      "description": "Ready-made confirm/cancel dialog on top of Modal with info/warning/danger severities. Covers message/question/outcome dialogs.",
+      "useCases": ["confirm", "confirmation", "are you sure", "yes no dialog", "question dialog", "destructive", "outcome dialog"],
+      "dependencies": ["Modal"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/overlay/ConfirmDialog.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/ConfirmDialogDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
       "name": "AppShell",
       "category": "layout",
+      "status": "ready",
       "path": "src/blocks/layout/AppShell.tsx",
       "description": "Application frame: role-filtered drawer sidebar, top bar with org badge and user account menu. Wraps page content.",
       "useCases": ["layout", "shell", "app shell", "sidebar", "navigation", "navbar", "dashboard layout", "scaffold", "menu", "page frame"],
@@ -117,6 +364,107 @@
         { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/AppShellDemo.tsx" },
         { "id": "html", "label": "HTML template", "source": "rendered-demo" }
       ]
+    },
+    {
+      "name": "DocumentBanner",
+      "category": "layout",
+      "status": "ready",
+      "path": "src/blocks/layout/DocumentBanner.tsx",
+      "description": "Document context header: title, status badge, meta pairs, lock indicator and referral strip. Covers LockingHeader/ReferralHeader/DocumentStatusControl.",
+      "useCases": ["banner", "header", "document header", "context bar", "locked by", "referral", "status header"],
+      "dependencies": ["StatusBadge"],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/layout/DocumentBanner.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/DocumentBannerDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "SidePanel",
+      "category": "layout",
+      "status": "ready",
+      "path": "src/blocks/layout/SidePanel.tsx",
+      "description": "Collapsible left/right panel with title, scrollable body and footer slot. Covers the scanner side-panel region.",
+      "useCases": ["side panel", "collapsible panel", "sidebar panel", "drawer section", "scanner panel", "tool panel"],
+      "dependencies": [],
+      "artifacts": [
+        { "id": "component", "label": "Component (.tsx)", "path": "src/blocks/layout/SidePanel.tsx" },
+        { "id": "usage", "label": "Usage / wiring (.tsx)", "path": "src/registry/demos/SidePanelDemo.tsx" },
+        { "id": "html", "label": "HTML template", "source": "rendered-demo" }
+      ]
+    },
+    {
+      "name": "UsersTable",
+      "category": "data",
+      "status": "planned",
+      "path": "src/blocks/data/UsersTable.tsx",
+      "description": "Generic admin data table for user administration and audit browsers (UserAdministration, SystemAuditBrowser).",
+      "useCases": ["admin", "users", "user administration", "management table", "generic table"],
+      "dependencies": [],
+      "artifacts": []
+    },
+    {
+      "name": "AuditTimeline",
+      "category": "data",
+      "status": "planned",
+      "path": "src/blocks/data/AuditTimeline.tsx",
+      "description": "Chronological audit log / event timeline for SystemAuditBrowser and application history.",
+      "useCases": ["audit", "timeline", "history", "log", "events", "audit trail"],
+      "dependencies": []
+    },
+    {
+      "name": "ResultsSummary",
+      "category": "data",
+      "status": "planned",
+      "path": "src/blocks/data/ResultsSummary.tsx",
+      "description": "Verification outcome summary panel - grouped check results with overall verdict (DocumentResults, SimpleSummaryResults, TvsPlusResults, AdvisorClient).",
+      "useCases": ["results", "summary", "outcome", "verdict", "checks summary", "advisor"],
+      "dependencies": ["StatusBadge", "FieldFeedback"]
+    },
+    {
+      "name": "ProgressIndicator",
+      "category": "feedback",
+      "status": "planned",
+      "path": "src/blocks/feedback/ProgressIndicator.tsx",
+      "description": "Determinate progress bar with label/percentage for long-running tasks (WorkingDialog, processing wizard pages).",
+      "useCases": ["progress bar", "progress", "percent", "task progress", "processing"],
+      "dependencies": []
+    },
+    {
+      "name": "PoolPicker",
+      "category": "forms",
+      "status": "planned",
+      "path": "src/blocks/forms/PoolPicker.tsx",
+      "description": "Work-pool selection dialog/control (OpenPool, AdvanceSearchOpenPools) with pool counts and descriptions.",
+      "useCases": ["pool", "work pool", "queue picker", "open pool", "assignment"],
+      "dependencies": ["Modal"]
+    },
+    {
+      "name": "FlexibleFields",
+      "category": "forms",
+      "status": "planned",
+      "path": "src/blocks/forms/FlexibleFields.tsx",
+      "description": "Schema-driven dynamic field renderer for per-organisation custom fields (ApplicationFlexibleFields, CustomFields).",
+      "useCases": ["custom fields", "dynamic form", "schema fields", "flexible fields", "org fields"],
+      "dependencies": ["TextField", "SelectField", "DateField", "CheckboxField"]
+    },
+    {
+      "name": "ImageCrop",
+      "category": "media",
+      "status": "planned",
+      "path": "src/blocks/media/ImageCrop.tsx",
+      "description": "Drag-to-crop rectangle overlay on a document image (CropImage dialog, ImageCropPage, DocumentImageCrop).",
+      "useCases": ["crop", "image crop", "select region", "cut out", "roi"],
+      "dependencies": []
+    },
+    {
+      "name": "FaceMatchView",
+      "category": "media",
+      "status": "planned",
+      "path": "src/blocks/media/FaceMatchView.tsx",
+      "description": "Face-image comparison with similarity score and zoom-in detail (FaceMatchPage, UKDLFacePage, FaceMatchZoomIn).",
+      "useCases": ["face match", "facial comparison", "selfie vs chip", "similarity", "zoom in face"],
+      "dependencies": ["ImageCompare"]
     }
   ]
 }

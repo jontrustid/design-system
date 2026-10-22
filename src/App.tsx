@@ -9,6 +9,7 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
 
   const active =
     entry.artifacts.find((a) => a.id === activeTab) ?? entry.artifacts[0];
+  const planned = entry.status === 'planned';
 
   async function copySource() {
     await navigator.clipboard.writeText(active.source);
@@ -17,10 +18,16 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
   }
 
   return (
-    <section className="card border border-base-300 bg-base-100 shadow-sm">
+    <section
+      id={`block-${entry.name}`}
+      className={`card scroll-mt-24 border bg-base-100 shadow-sm ${
+        planned ? 'border-dashed border-base-300' : 'border-base-300'
+      }`}
+    >
       <div className="card-body gap-4">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h3 className="card-title">{entry.name}</h3>
+          {planned && <span className="badge badge-warning badge-sm">planned</span>}
           <code className="text-xs text-base-content/50">{entry.path}</code>
           {entry.dependencies.length > 0 && (
             <span className="text-xs text-base-content/60">
@@ -31,9 +38,11 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
 
         <p className="text-sm text-base-content/70">{entry.description}</p>
 
-        <div className="rounded-box border border-base-300 bg-base-200/60 p-4">
-          {entry.demo}
-        </div>
+        {!planned && (
+          <div className="rounded-box border border-base-300 bg-base-200/60 p-4">
+            {entry.demo}
+          </div>
+        )}
 
         <div className="flex flex-wrap items-center gap-2">
           {entry.useCases.slice(0, 6).map((uc) => (
@@ -41,16 +50,18 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
               {uc}
             </span>
           ))}
-          <button
-            type="button"
-            className="btn btn-outline btn-sm ms-auto"
-            onClick={() => setShowSource((s) => !s)}
-          >
-            {showSource ? 'Hide source' : 'View source'}
-          </button>
+          {entry.artifacts.length > 0 && (
+            <button
+              type="button"
+              className="btn btn-outline btn-sm ms-auto"
+              onClick={() => setShowSource((s) => !s)}
+            >
+              {showSource ? 'Hide source' : 'View source'}
+            </button>
+          )}
         </div>
 
-        {showSource && (
+        {showSource && active && (
           <div className="overflow-hidden rounded-box border border-base-300">
             <div role="tablist" className="tabs tabs-box flex-nowrap rounded-none bg-base-200">
               {entry.artifacts.map((artifact) => (
@@ -107,13 +118,16 @@ export default function App() {
     return [...map.entries()];
   }, [filtered]);
 
+  const readyCount = catalogue.filter((b) => b.status === 'ready').length;
+  const plannedCount = catalogue.length - readyCount;
+
   return (
     <div className="min-h-dvh bg-base-200">
-      <header className="navbar sticky top-0 z-10 gap-4 border-b border-base-300 bg-base-100 px-4 sm:px-6">
+      <header className="navbar sticky top-0 z-30 gap-4 border-b border-base-300 bg-base-100 px-4 sm:px-6">
         <div>
           <h1 className="text-lg font-semibold text-primary">TrustID Design System</h1>
           <p className="text-xs text-base-content/60">
-            Block registry - {catalogue.length} blocks
+            {readyCount} blocks{plannedCount > 0 && ` + ${plannedCount} planned`}
           </p>
         </div>
         <input
@@ -125,23 +139,50 @@ export default function App() {
         />
       </header>
 
-      <main className="mx-auto flex max-w-5xl flex-col gap-10 p-4 sm:p-6">
-        {grouped.map(([category, entries]) => (
-          <section key={category} className="flex flex-col gap-4">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-base-content/60">
-              {category}
-            </h2>
-            {entries.map((entry) => (
-              <BlockCard key={entry.name} entry={entry} />
+      <div className="mx-auto flex max-w-6xl">
+        <aside className="sticky top-16 hidden h-[calc(100dvh-4rem)] w-60 shrink-0 overflow-y-auto border-r border-base-300 bg-base-100 p-3 lg:block">
+          <ul className="menu menu-sm w-full">
+            {grouped.map(([category, entries]) => (
+              <li key={category}>
+                <span className="menu-title uppercase">{category}</span>
+                <ul>
+                  {entries.map((entry) => (
+                    <li key={entry.name}>
+                      <a
+                        href={`#block-${entry.name}`}
+                        className={entry.status === 'planned' ? 'text-base-content/50' : ''}
+                      >
+                        <span className="flex-1 truncate">{entry.name}</span>
+                        {entry.status === 'planned' && (
+                          <span className="badge badge-warning badge-xs">planned</span>
+                        )}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
             ))}
-          </section>
-        ))}
-        {filtered.length === 0 && (
-          <p className="py-16 text-center text-base-content/60">
-            No blocks match "{query}".
-          </p>
-        )}
-      </main>
+          </ul>
+        </aside>
+
+        <main className="flex min-w-0 flex-1 flex-col gap-10 p-4 sm:p-6">
+          {grouped.map(([category, entries]) => (
+            <section key={category} className="flex flex-col gap-4">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-base-content/60">
+                {category}
+              </h2>
+              {entries.map((entry) => (
+                <BlockCard key={entry.name} entry={entry} />
+              ))}
+            </section>
+          ))}
+          {filtered.length === 0 && (
+            <p className="py-16 text-center text-base-content/60">
+              No blocks match "{query}".
+            </p>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

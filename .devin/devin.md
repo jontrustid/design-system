@@ -38,9 +38,10 @@ copyable source (shadcn-style), not a published package.
 ## Registry
 
 `src/registry/blocks.json` is the machine-readable catalogue that AI sessions
-read first. Fields per block: `name`, `category`, `path`, `description`,
+read first. Fields per block: `name`, `category`, `status` (`"ready"` =
+implemented; `"planned"` = audited gap, no file yet), `path`, `description`,
 `useCases` (matching keywords), `dependencies` (other block names),
-`artifacts`.
+`artifacts` (omit for planned blocks).
 
 `artifacts` lists the viewable/copyable sources for the block:
 

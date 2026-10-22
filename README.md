@@ -58,6 +58,7 @@ block, add the file and another `artifacts` entry pointing at it.
 {
   "name": "ApplicationsTable",
   "category": "data",
+  "status": "ready",
   "path": "src/blocks/data/ApplicationsTable.tsx",
   "description": "...",
   "useCases": ["table", "inbox", "queue", ...],
@@ -69,6 +70,10 @@ block, add the file and another `artifacts` entry pointing at it.
   ]
 }
 ```
+
+`status` is `"ready"` (implemented, has demo + artifacts) or `"planned"`
+(audited but not yet built — entries record the intended path/useCases so
+sessions know the gap exists).
 
 To satisfy a request like "build me a form":
 
