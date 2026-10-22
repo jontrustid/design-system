@@ -3,8 +3,11 @@ import { catalogue } from './registry/catalogue';
 import type { CatalogueEntry } from './registry/catalogue';
 import ThemeSection from './theme/ThemeSection';
 
-const THEMES = ['trustid', 'trustid-dark'] as const;
-type Theme = (typeof THEMES)[number];
+const THEMES = [
+  { id: 'veriscan', label: 'VeriScan' },
+  { id: 'test', label: 'Test' },
+] as const;
+type Theme = (typeof THEMES)[number]['id'];
 
 function BlockCard({ entry }: { entry: CatalogueEntry }) {
   const [showSource, setShowSource] = useState(false);
@@ -102,9 +105,10 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
 
 export default function App() {
   const [query, setQuery] = useState('');
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem('theme') as Theme) || 'trustid',
-  );
+  const [theme, setTheme] = useState<Theme>(() => {
+    const stored = localStorage.getItem('theme');
+    return THEMES.some((t) => t.id === stored) ? (stored as Theme) : 'veriscan';
+  });
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -150,13 +154,15 @@ export default function App() {
           onChange={(e) => setQuery(e.target.value)}
         />
         <label className="label cursor-pointer gap-2">
-          <span className="label-text text-xs">Dark</span>
+          <span className="label-text text-xs">VeriScan</span>
           <input
             type="checkbox"
             className="toggle toggle-sm"
-            checked={theme === 'trustid-dark'}
-            onChange={(e) => setTheme(e.target.checked ? 'trustid-dark' : 'trustid')}
+            checked={theme === 'test'}
+            onChange={(e) => setTheme(e.target.checked ? 'test' : 'veriscan')}
+            aria-label="Toggle between VeriScan and Test themes"
           />
+          <span className="label-text text-xs">Test</span>
         </label>
       </header>
 

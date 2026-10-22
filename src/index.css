@@ -5,12 +5,12 @@
 }
 
 @plugin "daisyui/theme" {
-  name: "trustid";
+  name: "veriscan";
   default: true;
   prefersdark: false;
   color-scheme: light;
 
-  /* TrustID blues/greens (placeholder palette, refine later) */
+  /* VeriScan blues/greens (placeholder palette, refine later) */
   --color-base-100: #f5f8fb;
   --color-base-200: #e7eef4;
   --color-base-300: #d0dce6;
@@ -43,12 +43,12 @@
 }
 
 @plugin "daisyui/theme" {
-  name: "trustid-dark";
+  name: "test";
   default: false;
   prefersdark: false;
   color-scheme: dark;
 
-  /* Dark companion to trustid (placeholder palette, refine later) */
+  /* Alternate theme for checking theme-ability (placeholder palette) */
   --color-base-100: #141c26;
   --color-base-200: #0e151d;
   --color-base-300: #22303e;

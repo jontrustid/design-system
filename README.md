@@ -5,7 +5,8 @@ document-verification app). shadcn-style: blocks are **copyable source**, not an
 npm package. Grab a file, drop it in your app, own it.
 
 Stack: **Vite + React 19 + TypeScript + Tailwind CSS 4 + daisyUI 5** (custom
-`trustid` theme defined in `src/index.css`).
+`veriscan` theme defined in `src/index.css`, plus a `test` alternate theme
+used to verify blocks stay theme-agnostic).
 
 ## Run it
 
@@ -28,7 +29,7 @@ src/
   registry/demos/<BlockName>Demo.tsx  # wiring/usage example per block
   registry/demos/fixtures.tsx         # shared demo fixtures
   App.tsx                             # catalogue page
-  index.css                           # Tailwind 4 + daisyUI 5 + trustid theme
+  index.css                           # Tailwind 4 + daisyUI 5 + veriscan/test themes
 ```
 
 ## Source artifacts
@@ -93,7 +94,7 @@ Block requirements in the target app: **React 19+, Tailwind CSS 4, daisyUI 5**
 (for the `.tsx` component/usage artifacts — the HTML artifact needs only
 Tailwind + daisyUI). They use daisyUI semantic classes only (`btn`, `card`,
 `badge`, `table`, `steps`, `drawer`, ...), so they pick up whatever daisyUI
-theme the host app defines — ideally the `trustid` theme from `src/index.css`.
+theme the host app defines — ideally the `veriscan` theme from `src/index.css`.
 No hard-coded hex colours are allowed, which keeps this true.
 
 ## Adding a new block

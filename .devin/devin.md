@@ -8,8 +8,8 @@ copyable source (shadcn-style), not a published package.
 - Vite + React 19 + TypeScript (strict, `verbatimModuleSyntax`,
   `erasableSyntaxOnly` — use `import type` for type-only imports)
 - Tailwind CSS 4 via `@tailwindcss/vite`
-- daisyUI 5 via `@plugin "daisyui"`; the `trustid` theme is defined in
-  `src/index.css` with `@plugin "daisyui/theme"`
+- daisyUI 5 via `@plugin "daisyui"`; the `veriscan` theme (plus a `test`
+  alternate) is defined in `src/index.css` with `@plugin "daisyui/theme"`
 
 ## Block conventions
 
