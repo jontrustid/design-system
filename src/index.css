@@ -43,12 +43,12 @@
 }
 
 @plugin "daisyui/theme" {
-  name: "test";
+  name: "veriscan-dark";
   default: false;
-  prefersdark: false;
+  prefersdark: true;
   color-scheme: dark;
 
-  /* Alternate theme for checking theme-ability (placeholder palette) */
+  /* Dark companion to veriscan (placeholder palette, refine later) */
   --color-base-100: #141c26;
   --color-base-200: #0e151d;
   --color-base-300: #22303e;
@@ -69,6 +69,83 @@
   --color-warning-content: #241a03;
   --color-error: #e05e5e;
   --color-error-content: #2a0d0d;
+
+  --radius-selector: 0.25rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "test";
+  default: false;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Scratch theme for checking theme-ability - deliberately different
+     palette (violet/orange) so theme switches are obvious */
+  --color-base-100: #faf7fd;
+  --color-base-200: #f0eaf9;
+  --color-base-300: #ddd1f0;
+  --color-base-content: #251b36;
+  --color-primary: #6d28d9;
+  --color-primary-content: #f4effd;
+  --color-secondary: #c2410c;
+  --color-secondary-content: #fdf0e7;
+  --color-accent: #be185d;
+  --color-accent-content: #fdeaf2;
+  --color-neutral: #322844;
+  --color-neutral-content: #e3dcf0;
+  --color-info: #7c5cd6;
+  --color-info-content: #f2edfc;
+  --color-success: #0e9488;
+  --color-success-content: #e6f7f5;
+  --color-warning: #d97706;
+  --color-warning-content: #fdf3de;
+  --color-error: #be123c;
+  --color-error-content: #fdebee;
+
+  --radius-selector: 0.25rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "test-dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: dark;
+
+  /* Dark companion to test */
+  --color-base-100: #1a1426;
+  --color-base-200: #120e1b;
+  --color-base-300: #2b2140;
+  --color-base-content: #e4dcf2;
+  --color-primary: #a78bfa;
+  --color-primary-content: #1b1038;
+  --color-secondary: #fb8b3c;
+  --color-secondary-content: #2a1303;
+  --color-accent: #f0649a;
+  --color-accent-content: #300d1d;
+  --color-neutral: #0e0a16;
+  --color-neutral-content: #cfc3e3;
+  --color-info: #a78bfa;
+  --color-info-content: #1b1038;
+  --color-success: #2dd4bf;
+  --color-success-content: #042a26;
+  --color-warning: #f0a93c;
+  --color-warning-content: #2a1c03;
+  --color-error: #f25c7f;
+  --color-error-content: #2e0a15;
 
   --radius-selector: 0.25rem;
   --radius-field: 0.375rem;

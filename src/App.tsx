@@ -7,7 +7,7 @@ const THEMES = [
   { id: 'veriscan', label: 'VeriScan' },
   { id: 'test', label: 'Test' },
 ] as const;
-type Theme = (typeof THEMES)[number]['id'];
+type ThemeId = (typeof THEMES)[number]['id'];
 
 function BlockCard({ entry }: { entry: CatalogueEntry }) {
   const [showSource, setShowSource] = useState(false);
@@ -105,10 +105,14 @@ function BlockCard({ entry }: { entry: CatalogueEntry }) {
 
 export default function App() {
   const [query, setQuery] = useState('');
-  const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem('theme');
-    return THEMES.some((t) => t.id === stored) ? (stored as Theme) : 'veriscan';
+  const [themeId, setThemeId] = useState<ThemeId>(() => {
+    const stored = localStorage.getItem('theme')?.replace('-dark', '');
+    return THEMES.some((t) => t.id === stored) ? (stored as ThemeId) : 'veriscan';
   });
+  const [dark, setDark] = useState(
+    () => localStorage.getItem('theme')?.endsWith('-dark') ?? false,
+  );
+  const theme = `${themeId}${dark ? '-dark' : ''}`;
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -153,16 +157,27 @@ export default function App() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <label className="label cursor-pointer gap-2 rounded-box border border-base-300 px-3 py-1.5">
-          <span className="label-text text-sm font-medium">VeriScan</span>
+        <select
+          className="select select-sm w-32"
+          value={themeId}
+          onChange={(e) => setThemeId(e.target.value as ThemeId)}
+          aria-label="Theme"
+        >
+          {THEMES.map((t) => (
+            <option key={t.id} value={t.id}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+        <label className="label cursor-pointer gap-2">
+          <span className="label-text text-sm">Dark</span>
           <input
             type="checkbox"
-            className="toggle toggle-primary"
-            checked={theme === 'test'}
-            onChange={(e) => setTheme(e.target.checked ? 'test' : 'veriscan')}
-            aria-label="Toggle between VeriScan and Test themes"
+            className="toggle toggle-primary toggle-sm"
+            checked={dark}
+            onChange={(e) => setDark(e.target.checked)}
+            aria-label="Toggle dark mode"
           />
-          <span className="label-text text-sm font-medium">Test</span>
         </label>
       </header>
 
