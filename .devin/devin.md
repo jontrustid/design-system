@@ -69,6 +69,37 @@ renamed, or moved must be reflected in the same change.
 `catalogue.tsx` resolves component/demo sources via `import.meta.glob` —
 follow the naming conventions and no per-block wiring is required.
 
+## Converting pasted Figma HTML into blocks
+
+Sessions may receive raw HTML/CSS copied from Figma Dev Mode (Inspect panel,
+"Copy as HTML", or plugins like html.to.design) with a request to make the
+registry support the design. Figma export is auto-generated markup —
+absolute positioning, inline styles, hex colours, deep div nesting. **Never
+paste it verbatim.** Convert it:
+
+1. **Structure** — strip absolute positioning and auto-layout wrapper divs.
+   Rebuild with semantic elements (`<table>`, `<ul>`, `<form>`, `<header>`)
+   and flex/grid via Tailwind classes.
+2. **Colours** — never keep hex values or inline colour styles. Map each
+   colour to the nearest daisyUI semantic class (`bg-primary`,
+   `text-base-content`, `alert-warning`, `badge-success`...). If a colour
+   genuinely has no matching token, extend the appropriate `daisyui/theme`
+   block in `src/index.css` (and its `-dark` companion) — do not hard-code
+   it in a block.
+3. **Typography/spacing/radius** — map to `text-*`, `p-*`, `gap-*`,
+   `rounded-*` utilities. The theme's `--radius-*` tokens govern component
+   corners; match the design's visual weight, not its pixel values.
+4. **Composition first** — check whether existing blocks cover the design
+   (most VeriScan screens are compositions). Only create a new block for a
+   genuinely reusable pattern, following the block conventions above.
+5. **Repeatable content** — repeated elements in the design (list rows,
+   form fields, check results) become props + data-driven rendering, not
+   duplicated markup.
+6. **Register** — any new/changed block needs a demo and a `blocks.json`
+   entry in the same change. Theme-only changes need no registry update.
+7. **Verify** — `npm run build` must pass; the pasted design should be
+   reproducible from registry blocks, not just compiled.
+
 ## When asked to "build a form/table/page" using this registry
 
 1. Read `blocks.json`, match the request to `useCases`/`description`.

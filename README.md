@@ -97,6 +97,21 @@ Tailwind + daisyUI). They use daisyUI semantic classes only (`btn`, `card`,
 theme the host app defines — ideally the `veriscan` theme from `src/index.css`.
 No hard-coded hex colours are allowed, which keeps this true.
 
+## Importing designs (Figma → registry)
+
+To update the registry from a design: copy HTML/CSS from Figma Dev Mode
+(Inspect panel → "Copy as HTML", or a plugin like html.to.design) and prompt
+a Devin session:
+
+> Update the design-system repo so this screen can be built from blocks —
+> adjust/create blocks and theme tokens as needed:
+> `<pasted figma html>`
+
+The session normalises the auto-generated markup (inline styles, hex
+colours, absolute positioning) into the registry's conventions: daisyUI
+semantic classes, theme tokens in `index.css`, and new blocks registered in
+`blocks.json`. See `.devin/devin.md` for the conversion rules.
+
 ## Adding a new block
 
 1. Create `src/blocks/<category>/<BlockName>.tsx`. Conventions:
