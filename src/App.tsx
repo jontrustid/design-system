@@ -153,16 +153,16 @@ export default function App() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <label className="label cursor-pointer gap-2">
-          <span className="label-text text-xs">VeriScan</span>
+        <label className="label cursor-pointer gap-2 rounded-box border border-base-300 px-3 py-1.5">
+          <span className="label-text text-sm font-medium">VeriScan</span>
           <input
             type="checkbox"
-            className="toggle toggle-sm"
+            className="toggle toggle-primary"
             checked={theme === 'test'}
             onChange={(e) => setTheme(e.target.checked ? 'test' : 'veriscan')}
             aria-label="Toggle between VeriScan and Test themes"
           />
-          <span className="label-text text-xs">Test</span>
+          <span className="label-text text-sm font-medium">Test</span>
         </label>
       </header>
 
