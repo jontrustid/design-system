@@ -1,35 +1,90 @@
 # TrustID Design System
 
 UI block registry for the future React rewrite of **VeriScan** (our WPF
-document-verification app). shadcn-style: blocks are **copyable source**, not an
-npm package. Grab a file, drop it in your app, own it.
+document-verification app). It is both a browsable catalogue and a **versioned,
+importable package** (`@trustid/design-system`) — apps pin a version, import
+blocks, and pick a theme by ID.
 
-Stack: **Vite + React 19 + TypeScript + Tailwind CSS 4 + daisyUI 5** (custom
-`veriscan` theme defined in `src/index.css`, plus a `test` alternate theme
-used to verify blocks stay theme-agnostic).
+Stack: **Vite + React 19 + TypeScript + Tailwind CSS 4 + daisyUI 5**. Themes are
+defined in `src/themes.css`: `veriscan`, `veriscan-dark`, `test`, `test-dark`.
+Switch at runtime by setting `data-theme="<themeId>"` on `<html>`.
 
 ## Run it
 
 ```bash
 npm install
 npm run dev      # catalogue at http://localhost:5173
-npm run build    # type-check + production build
+npm run build    # type-check + production build + dist/design-system.css
 ```
 
 The catalogue page lists every block grouped by category, with a live preview
 and a "View source" toggle.
 
+## Using it in an app
+
+Add the dependency (git tag while unpublished; swap for a registry version once
+published):
+
+```json
+"@trustid/design-system": "git+https://github.com/<org>/design-system.git#v0.1.0"
+```
+
+or during local development:
+
+```json
+"@trustid/design-system": "file:../design-system"
+```
+
+Import blocks from the barrel (or per-file for tree-shaken subpaths):
+
+```ts
+import { AppShell, StatusBadge } from '@trustid/design-system';
+import type { ApplicationStatus } from '@trustid/design-system';
+// or: import AppShell from '@trustid/design-system/blocks/layout/AppShell';
+```
+
+Wire the themes into the app's Tailwind 4 entry CSS:
+
+```css
+@import "tailwindcss";
+@import "@trustid/design-system/themes.css";
+@source "../node_modules/@trustid/design-system/src";
+```
+
+- `themes.css` registers the daisyUI themes — set `data-theme="veriscan"` etc.
+- `@source` is **required**: Tailwind 4 only emits classes it can scan, and it
+  does not scan `node_modules` by default. Adjust the relative path if the app
+  isn't installed at a standard `node_modules` depth (or use an absolute path).
+
+For apps that don't run Tailwind themselves (or to drop a ready-made stylesheet
+into e.g. a Razor page), `npm run build` emits a precompiled
+`dist/design-system.css` — every theme + every class the catalogue exercises:
+
+```html
+<link rel="stylesheet" href=".../design-system.css" />
+<!-- then set data-theme on <html> and use daisyUI classes directly -->
+```
+
+Peer requirements: **React 19+**. For `themes.css` you also need
+**Tailwind CSS 4 + daisyUI 5** in the app (the blocks emit daisyUI semantic
+classes — `btn`, `card`, `badge`, `steps`, `drawer` — which pick up whichever
+`data-theme` is active; no hard-coded hex colours allowed).
+
 ## Repo layout
 
 ```
 src/
+  index.ts                            # package barrel — re-exports every block + types
+  index.css                           # catalogue entry: Tailwind 4 + ./themes.css
+  themes.css                          # daisyUI theme definitions (package theme export)
   blocks/<category>/<BlockName>.tsx   # the blocks themselves
   registry/blocks.json                # machine-readable catalogue
   registry/catalogue.tsx              # resolves registry -> demos + source artifacts
   registry/demos/<BlockName>Demo.tsx  # wiring/usage example per block
   registry/demos/fixtures.tsx         # shared demo fixtures
   App.tsx                             # catalogue page
-  index.css                           # Tailwind 4 + daisyUI 5 + veriscan/test themes
+tools/
+  copy-css.mjs                        # post-build: dist/assets/*.css -> dist/design-system.css
 ```
 
 ## Source artifacts
@@ -80,28 +135,22 @@ To satisfy a request like "build me a form":
 
 1. Read `blocks.json` and match the request against `useCases`,
    `description`, `name` and `category`.
-2. Copy the file at `path` into the target app.
-3. **Also copy every block listed in `dependencies`** (they import each other
-   via relative paths, e.g. `ApplicationsTable` imports
-   `../feedback/StatusBadge`). Dependencies may have their own dependencies —
-   copy the transitive closure.
-4. Use the `usage` artifact as the wiring reference for props/callbacks; use
+2. Import the block (`import { X } from '@trustid/design-system'`) — block
+   `dependencies` resolve automatically inside the package. If the app isn't
+   consuming the package, copy the file at `path` **plus the transitive
+   closure of its `dependencies`** (they import each other via relative
+   paths, e.g. `ApplicationsTable` imports `../feedback/StatusBadge`).
+3. Use the `usage` artifact as the wiring reference for props/callbacks; use
    the `html` artifact (rendered markup) when targeting a non-React stack.
-5. Blocks are presentation-only: typed props in, callbacks out. There are no
+4. Blocks are presentation-only: typed props in, callbacks out. There are no
    API calls and no app-state dependencies to stub.
-
-Block requirements in the target app: **React 19+, Tailwind CSS 4, daisyUI 5**
-(for the `.tsx` component/usage artifacts — the HTML artifact needs only
-Tailwind + daisyUI). They use daisyUI semantic classes only (`btn`, `card`,
-`badge`, `table`, `steps`, `drawer`, ...), so they pick up whatever daisyUI
-theme the host app defines — ideally the `veriscan` theme from `src/index.css`.
-No hard-coded hex colours are allowed, which keeps this true.
 
 Known limitation: `className` merging is plain concatenation (no
 `tailwind-merge`), so passing a class that conflicts with a block's own
 structural classes (e.g. `w-full` vs `max-w-sm`) yields both classes rather
-than an override. To restyle a block's layout, wrap it in a parent element
-— or edit your copy of the block, which is the point of copyable source.
+than an override. To restyle a block's layout, wrap it in a parent element.
+If a block needs a behaviour change, fix it **here** and release a new
+version — the package is the source of truth.
 
 ## Importing designs (Figma → registry)
 

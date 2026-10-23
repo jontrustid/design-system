@@ -14,6 +14,8 @@ export interface ShellUser {
   name: string;
   role: string;
   org: string;
+  /** Display picture URL — a default silhouette shows when absent. */
+  photoUrl?: string;
 }
 
 export interface AppShellProps extends ComponentPropsWithRef<'div'> {
@@ -47,13 +49,6 @@ export default function AppShell({
   const visibleItems = navItems.filter(
     (item) => !item.roles || item.roles.includes(user.role),
   );
-
-  const initials = user.name
-    .split(' ')
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
 
   return (
     <div
@@ -102,20 +97,28 @@ export default function AppShell({
             </div>
             <div className="dropdown dropdown-end">
               <button type="button" tabIndex={0} className="btn btn-ghost btn-circle avatar avatar-placeholder">
-                <span className="w-9 rounded-full bg-primary text-primary-content text-sm">
-                  {initials}
+                <span className="w-9 rounded-full bg-neutral text-neutral-content">
+                  {user.photoUrl ? (
+                    <img src={user.photoUrl} alt="" className="h-full w-full rounded-full object-cover" />
+                  ) : (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="m-auto mt-1.5 h-6 w-6"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-3.6 0-8 1.8-8 5v1h16v-1c0-3.2-4.4-5-8-5Z" />
+                    </svg>
+                  )}
                 </span>
               </button>
               <ul
                 tabIndex={0}
                 className="menu dropdown-content z-10 mt-2 w-48 rounded-box border border-base-300 bg-base-100 p-2 shadow-md"
               >
-                <li className="menu-title">{user.name}</li>
+                {user.name ? <li className="menu-title">{user.name}</li> : null}
                 <li>
-                  <a>My account</a>
-                </li>
-                <li>
-                  <a>Preferences</a>
+                  <a onClick={() => onNavigate?.('account')}>My account</a>
                 </li>
                 <li>
                   <a onClick={onSignOut}>Sign out</a>

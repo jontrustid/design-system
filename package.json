@@ -3,22 +3,50 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "TrustID UI block registry - copyable, presentation-only React blocks for the VeriScan web rewrite.",
+  "description": "TrustID UI block registry - presentation-only React blocks plus daisyUI themes for the VeriScan web rewrite and related apps.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./blocks/*": "./src/blocks/*.tsx",
+    "./themes.css": "./src/themes.css",
+    "./design-system.css": "./dist/design-system.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "dist",
+    "registry"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "peerDependencies": {
+    "daisyui": ">=5",
+    "react": ">=19",
+    "react-dom": ">=19",
+    "tailwindcss": ">=4"
+  },
+  "peerDependenciesMeta": {
+    "daisyui": {
+      "optional": true
+    },
+    "tailwindcss": {
+      "optional": true
+    }
+  },
   "scripts": {
     "dev": "node node_modules/vite/bin/vite.js",
-    "build": "node node_modules/typescript/bin/tsc -b && node node_modules/vite/bin/vite.js build",
+    "build": "node node_modules/typescript/bin/tsc -b && node node_modules/vite/bin/vite.js build && node tools/copy-css.mjs",
     "preview": "node node_modules/vite/bin/vite.js preview"
   },
-  "dependencies": {
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "daisyui": "^5.7.50",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "tailwindcss": "^4.3.3",
     "typescript": "~5.9.3",
     "vite": "8.3.4"

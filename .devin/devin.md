@@ -1,15 +1,19 @@
 # Devin session rules — TrustID Design System
 
-This repo is a **block registry** for the VeriScan React rewrite. Blocks are
-copyable source (shadcn-style), not a published package.
+This repo is a **block registry** for the VeriScan React rewrite, shipped as a
+versioned npm package (`@trustid/design-system`): `src/index.ts` is the barrel,
+`src/themes.css` is the theme export, and `npm run build` additionally emits a
+precompiled `dist/design-system.css`. Blocks ship as source (.tsx); consumers
+compile them and must add `@source` for Tailwind to scan the package.
 
 ## Stack
 
 - Vite + React 19 + TypeScript (strict, `verbatimModuleSyntax`,
   `erasableSyntaxOnly` — use `import type` for type-only imports)
 - Tailwind CSS 4 via `@tailwindcss/vite`
-- daisyUI 5 via `@plugin "daisyui"`; the `veriscan` theme (plus a `test`
-  alternate) is defined in `src/index.css` with `@plugin "daisyui/theme"`
+- daisyUI 5 via `@plugin "daisyui"`; the `veriscan` theme (plus `test`,
+  `veriscan-dark`, `test-dark`) is defined in `src/themes.css` with
+  `@plugin "daisyui/theme"` — keep themes there, `src/index.css` only imports it
 
 ## Block conventions
 
@@ -27,8 +31,8 @@ copyable source (shadcn-style), not a published package.
   `className` into the root classes (consumer classes last), spread `...rest`
   onto the root element.
 - Conditional classes use a local `cx(...)` helper kept inside the block file
-  (blocks must remain self-contained for drop-in copying — no shared util
-  imports outside `dependencies`). `cx` concatenates rather than resolving
+  (blocks must remain self-contained — no shared util imports outside
+  `dependencies`). `cx` concatenates rather than resolving
   conflicts (no tailwind-merge): don't rely on a consumer `className`
   overriding the block's own structural classes.
 - Interactive elements must be keyboard-usable: focusable (`tabIndex`),
