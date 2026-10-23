@@ -7,6 +7,8 @@ export interface FaceMatchViewProps
   capturedSrc?: string;
   /** Reference photo, e.g. from the RFID chip. */
   referenceSrc?: string;
+  capturedLabel?: string;
+  referenceLabel?: string;
   /** Similarity score 0-1 from the matching engine. */
   similarityScore?: number;
   /** Threshold used to colour the score. */
@@ -24,7 +26,9 @@ function cx(...classes: Array<string | false | null | undefined>) {
 
 export default function FaceMatchView({
   capturedSrc,
+  capturedLabel = 'Captured face',
   referenceSrc,
+  referenceLabel = 'Chip photo',
   similarityScore,
   matchThreshold = 0.8,
   question = 'Are these images the same person?',
@@ -67,8 +71,8 @@ export default function FaceMatchView({
 
       <ImageCompare
         images={[
-          { label: 'Captured face', src: capturedSrc },
-          { label: 'Chip photo', src: referenceSrc },
+          { label: capturedLabel, src: capturedSrc },
+          { label: referenceLabel, src: referenceSrc },
         ]}
         question={question}
         answer={answer}

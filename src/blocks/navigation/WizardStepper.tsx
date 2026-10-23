@@ -12,7 +12,7 @@ export interface WizardStepperProps extends ComponentPropsWithRef<'div'> {
   currentIndex: number;
   onBack?: () => void;
   onNext?: () => void;
-  /** Clicking a completed step jumps back to it. */
+  /** Clicking any step other than the current one jumps to it. */
   onStepClick?: (index: number) => void;
   backLabel?: string;
   nextLabel?: string;
@@ -46,7 +46,7 @@ export default function WizardStepper({
       <ul className="steps w-full">
         {steps.map((step, index) => {
           const reached = index <= currentIndex;
-          const clickable = index < currentIndex && onStepClick !== undefined;
+          const clickable = index !== currentIndex && onStepClick !== undefined;
           return (
             <li
               key={step.id}
