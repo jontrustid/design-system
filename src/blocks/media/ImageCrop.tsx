@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type {
   ComponentPropsWithRef,
   KeyboardEvent as ReactKeyboardEvent,
@@ -42,11 +42,49 @@ export default function ImageCrop({
   ...rest
 }: ImageCropProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const drawnRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState<CropRect | undefined>(defaultRect);
   const dragOrigin = useRef<{ x: number; y: number } | undefined>(undefined);
+  // The image renders letterboxed inside its element (object-contain), so all
+  // percent math must be relative to the drawn image rect, not the img box.
+  const [drawn, setDrawn] = useState<{ x: number; y: number; w: number; h: number }>();
+
+  function measureDrawn() {
+    const img = imgRef.current;
+    const box = containerRef.current;
+    if (!img || !box || !img.naturalWidth || !img.naturalHeight) {
+      setDrawn(undefined);
+      return;
+    }
+    const imgBox = img.getBoundingClientRect();
+    const boxRect = box.getBoundingClientRect();
+    if (!imgBox.width || !imgBox.height || !boxRect.width || !boxRect.height) {
+      setDrawn(undefined);
+      return;
+    }
+    const scale = Math.min(imgBox.width / img.naturalWidth, imgBox.height / img.naturalHeight);
+    const w = img.naturalWidth * scale;
+    const h = img.naturalHeight * scale;
+    setDrawn({
+      x: ((imgBox.left + (imgBox.width - w) / 2 - boxRect.left) / boxRect.width) * 100,
+      y: ((imgBox.top + (imgBox.height - h) / 2 - boxRect.top) / boxRect.height) * 100,
+      w: (w / boxRect.width) * 100,
+      h: (h / boxRect.height) * 100,
+    });
+  }
+
+  useEffect(() => {
+    const box = containerRef.current;
+    if (!box) return;
+    const observer = new ResizeObserver(measureDrawn);
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, []);
 
   function toPercent(event: ReactPointerEvent) {
-    const bounds = containerRef.current!.getBoundingClientRect();
+    const bounds = drawnRef.current?.getBoundingClientRect();
+    if (!bounds || !bounds.width || !bounds.height) return { x: 0, y: 0 };
     return {
       x: clamp(((event.clientX - bounds.left) / bounds.width) * 100, 0, 100),
       y: clamp(((event.clientY - bounds.top) / bounds.height) * 100, 0, 100),
@@ -120,22 +158,42 @@ export default function ImageCrop({
         onPointerUp={handlePointerUp}
         onKeyDown={handleKeyDown}
       >
-        <img src={src} alt={alt} className="block max-h-96 w-full object-contain" draggable={false} />
-        {rect && (
+        <img
+          ref={imgRef}
+          src={src}
+          alt={alt}
+          className="block max-h-96 w-full object-contain"
+          draggable={false}
+          onLoad={measureDrawn}
+        />
+        {drawn && (
           <div
-            className="absolute border-2 border-primary"
+            ref={drawnRef}
+            className="absolute"
             style={{
-              left: `${rect.x}%`,
-              top: `${rect.y}%`,
-              width: `${rect.width}%`,
-              height: `${rect.height}%`,
-              boxShadow: '0 0 0 9999px rgb(0 0 0 / 0.45)',
+              left: `${drawn.x}%`,
+              top: `${drawn.y}%`,
+              width: `${drawn.w}%`,
+              height: `${drawn.h}%`,
             }}
           >
-            {['-top-1 -left-1', '-top-1 -right-1', '-bottom-1 -left-1', '-bottom-1 -right-1'].map(
-              (pos) => (
-                <span key={pos} className={`absolute ${pos} h-2 w-2 rounded-full bg-primary`} />
-              ),
+            {rect && (
+              <div
+                className="absolute border-2 border-primary"
+                style={{
+                  left: `${rect.x}%`,
+                  top: `${rect.y}%`,
+                  width: `${rect.width}%`,
+                  height: `${rect.height}%`,
+                  boxShadow: '0 0 0 9999px rgb(0 0 0 / 0.45)',
+                }}
+              >
+                {['-top-1 -left-1', '-top-1 -right-1', '-bottom-1 -left-1', '-bottom-1 -right-1'].map(
+                  (pos) => (
+                    <span key={pos} className={`absolute ${pos} h-2 w-2 rounded-full bg-primary`} />
+                  ),
+                )}
+              </div>
             )}
           </div>
         )}
