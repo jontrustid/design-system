@@ -2,7 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { catalogue } from './registry/catalogue';
 import type { CatalogueEntry } from './registry/catalogue';
 import ThemeSection from './theme/ThemeSection';
-import { CURRENT_VERSION, currentEntryId, fetchVersions } from './version';
+import {
+  CURRENT_VERSION,
+  currentEntryId,
+  devServerReachable,
+  fetchVersions,
+  isExternalPath,
+} from './version';
 import type { VersionEntry } from './version';
 
 const THEMES = [
@@ -115,11 +121,20 @@ export default function App() {
     () => localStorage.getItem('theme')?.endsWith('-dark') ?? false,
   );
   const [versions, setVersions] = useState<VersionEntry[]>([]);
+  const [devUp, setDevUp] = useState<boolean>();
   const theme = `${themeId}${dark ? '-dark' : ''}`;
 
   useEffect(() => {
     void fetchVersions().then(setVersions);
   }, []);
+
+  // The 'dev' manifest entry links out to the dev server — probe whether it's
+  // actually listening so the option can be shown disabled when it isn't.
+  const devEntry = versions.find((v) => v.id === 'dev' && isExternalPath(v.path));
+  useEffect(() => {
+    setDevUp(undefined);
+    if (devEntry) void devServerReachable(devEntry.path).then(setDevUp);
+  }, [devEntry]);
 
   const activeVersionId = currentEntryId(versions);
   const versionOptions: VersionEntry[] =
@@ -179,20 +194,26 @@ export default function App() {
           value={activeVersionId}
           onChange={(e) => {
             const target = versions.find((v) => v.id === e.target.value);
-            if (target?.path) {
-              const url = new URL('../' + target.path, window.location.href);
-              url.hash = '';
-              url.search = '';
-              window.location.assign(url);
+            if (!target?.path) return;
+            if (isExternalPath(target.path)) {
+              window.location.assign(target.path);
+              return;
             }
+            const url = new URL('../' + target.path, window.location.href);
+            url.hash = '';
+            url.search = '';
+            window.location.assign(url);
           }}
           aria-label="Design system version"
         >
-          {selectVersionOptions.map((v) => (
-            <option key={v.id} value={v.id}>
-              {v.label}
-            </option>
-          ))}
+          {selectVersionOptions.map((v) => {
+            const devDown = v.id === 'dev' && isExternalPath(v.path) && devUp === false;
+            return (
+              <option key={v.id} value={v.id} disabled={devDown}>
+                {devDown ? `${v.label} — not running` : v.label}
+              </option>
+            );
+          })}
         </select>
         <select
           className="select select-sm w-32"

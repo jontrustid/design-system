@@ -4,8 +4,27 @@ import pkg from '../package.json';
 export interface VersionEntry {
   id: string;
   label: string;
-  /** Site-relative path with trailing slash, e.g. "0.1.0/" or "latest/". */
+  /** Site-relative path with trailing slash ("0.1.0/", "latest/") or an
+   * absolute URL — the manifest uses the latter for the dev-server link. */
   path: string;
+}
+
+/** External (cross-origin) entries navigate directly rather than resolving ../. */
+export function isExternalPath(path: string): boolean {
+  return /^https?:\/\//i.test(path);
+}
+
+/**
+ * True when a dev server answers at `url`. no-cors yields an opaque response
+ * when the port is listening and rejects when nothing is there.
+ */
+export async function devServerReachable(url: string): Promise<boolean> {
+  try {
+    await fetch(url, { mode: 'no-cors', cache: 'no-store' });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /** Version of the build currently running (package.json at build time). */

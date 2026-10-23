@@ -40,7 +40,14 @@ rmSync(siteDir, { recursive: true, force: true });
 rmSync(wtRoot, { recursive: true, force: true });
 mkdirSync(siteDir, { recursive: true });
 
-const versions = [{ id: 'latest', label: 'latest', path: 'latest/' }];
+// The 'dev' entry is an absolute URL — picking it in the dropdown leaves the
+// versioned site for the live dev server (npm run dev). DEV_URL is overridable
+// for non-standard ports.
+const devUrl = process.env.DEV_URL ?? 'http://localhost:5173';
+const versions = [
+  { id: 'dev', label: 'dev (hot reload)', path: devUrl },
+  { id: 'latest', label: 'latest', path: 'latest/' },
+];
 
 try {
   buildVersion(root, join(siteDir, 'latest'), 'working tree');
