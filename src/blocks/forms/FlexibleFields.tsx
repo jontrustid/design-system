@@ -32,6 +32,8 @@ export interface FlexibleFieldsProps
   values: FlexibleFieldValues;
   onChange?: (key: string, value: string | boolean) => void;
   errors?: Record<string, string>;
+  /** Read-only review mode: inputs get readOnly, selects/checkboxes get disabled. */
+  readOnly?: boolean;
   /** Grid columns at sm breakpoint and up. */
   columns?: 1 | 2;
 }
@@ -45,6 +47,7 @@ export default function FlexibleFields({
   values,
   onChange,
   errors = {},
+  readOnly = false,
   columns = 2,
   className,
   ref,
@@ -67,6 +70,7 @@ export default function FlexibleFields({
             options={field.options ?? []}
             placeholder={field.placeholder}
             value={typeof value === 'string' ? value : ''}
+            disabled={readOnly}
             onChange={(e) => onChange?.(field.key, e.target.value)}
           />
         );
@@ -75,6 +79,7 @@ export default function FlexibleFields({
           <DateField
             {...common}
             value={typeof value === 'string' ? value : ''}
+            readOnly={readOnly}
             onChange={(e) => onChange?.(field.key, e.target.value)}
           />
         );
@@ -83,6 +88,7 @@ export default function FlexibleFields({
           <CheckboxField
             {...common}
             checked={value === true}
+            disabled={readOnly}
             onChange={(e) => onChange?.(field.key, e.target.checked)}
           />
         );
@@ -92,6 +98,7 @@ export default function FlexibleFields({
             {...common}
             placeholder={field.placeholder}
             value={typeof value === 'string' ? value : ''}
+            readOnly={readOnly}
             onChange={(e) => onChange?.(field.key, e.target.value)}
           />
         );
@@ -102,6 +109,7 @@ export default function FlexibleFields({
             type={field.type === 'number' ? 'number' : 'text'}
             placeholder={field.placeholder}
             value={typeof value === 'string' ? value : ''}
+            readOnly={readOnly}
             onChange={(e) => onChange?.(field.key, e.target.value)}
           />
         );

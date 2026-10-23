@@ -14,6 +14,8 @@ export interface FaceMatchViewProps
   /** Threshold used to colour the score. */
   matchThreshold?: number;
   question?: string;
+  /** Answer options; defaults to Yes/No. Pass disabled options for read-only review. */
+  options?: { value: string; label: string; disabled?: boolean }[];
   answer?: string;
   onAnswer?: (value: string) => void;
   /** Fired when the operator wants the enlarged comparison (host shows a modal). */
@@ -32,6 +34,7 @@ export default function FaceMatchView({
   similarityScore,
   matchThreshold = 0.8,
   question = 'Are these images the same person?',
+  options,
   answer,
   onAnswer,
   onZoom,
@@ -75,6 +78,7 @@ export default function FaceMatchView({
           { label: referenceLabel, src: referenceSrc },
         ]}
         question={question}
+        options={options}
         answer={answer}
         onAnswer={onAnswer}
       />

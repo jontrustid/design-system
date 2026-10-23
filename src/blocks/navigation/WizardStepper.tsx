@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef, ReactNode } from 'react';
 
 export interface WizardStep {
   id: string;
@@ -10,6 +10,8 @@ export interface WizardStep {
 export interface WizardStepperProps extends ComponentPropsWithRef<'div'> {
   steps: WizardStep[];
   currentIndex: number;
+  /** Step content rendered between the strip and the Back/Next row. */
+  children?: ReactNode;
   onBack?: () => void;
   onNext?: () => void;
   /** Clicking any step other than the current one jumps to it. */
@@ -27,6 +29,7 @@ function cx(...classes: Array<string | false | null | undefined>) {
 export default function WizardStepper({
   steps,
   currentIndex,
+  children,
   onBack,
   onNext,
   onStepClick,
@@ -64,6 +67,8 @@ export default function WizardStepper({
           );
         })}
       </ul>
+
+      {children}
 
       <div className="flex items-center justify-between">
         <button
