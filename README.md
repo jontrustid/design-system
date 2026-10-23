@@ -13,8 +13,8 @@ Switch at runtime by setting `data-theme="<themeId>"` on `<html>`.
 
 ```bash
 npm install
-npm run dev      # catalogue at http://localhost:5173
-npm run build    # type-check + production build + dist/design-system.css
+npm run dev        # catalogue at http://localhost:5173/dev/ (hot reload)
+npm run build      # type-check + production build + dist/design-system.css
 ```
 
 The catalogue page lists every block grouped by category, with a live preview
@@ -25,6 +25,7 @@ and a "View source" toggle.
 ```bash
 npm run build:site     # -> site/ : latest/ + one dir per v* git tag
 npm run preview:site   # static-serve site/ at http://localhost:5180
+npm run dev:site       # :5180 + vite dev server behind the /dev/ proxy
 ```
 
 `build-versions.mjs` builds the working tree into `site/latest/` and each
@@ -33,6 +34,14 @@ npm run preview:site   # static-serve site/ at http://localhost:5180
 host as the site root — the header's version dropdown fetches
 `../versions.json`, so older builds automatically list newer releases.
 Each version dir also carries that release's `design-system.css`.
+
+The dropdown's **dev (hot reload)** entry points at `/dev/` on the site
+server. `preview:site` proxies `/dev/*` — including the HMR websocket — to the
+vite dev server, so `dev:site` gives you one URL for everything: released
+versions, `latest`, and the live working tree. The entry is probed on load and
+shown disabled when no dev server is reachable (e.g. a deployed static host).
+`npm run dev` alone still works — vite serves under `/dev/` itself so both
+access paths resolve identically.
 
 Release flow: bump `version` in package.json -> `npm run build` -> commit ->
 `git tag vX.Y.Z` -> `npm run build:site` -> deploy `site/`.

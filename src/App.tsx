@@ -128,12 +128,17 @@ export default function App() {
     void fetchVersions().then(setVersions);
   }, []);
 
-  // The 'dev' manifest entry links out to the dev server — probe whether it's
-  // actually listening so the option can be shown disabled when it isn't.
-  const devEntry = versions.find((v) => v.id === 'dev' && isExternalPath(v.path));
+  // The 'dev' manifest entry points at the dev server (the /dev/ proxy or an
+  // absolute URL) — probe whether it's actually serving so the option can be
+  // shown disabled when it isn't.
+  const devEntry = versions.find((v) => v.id === 'dev');
   useEffect(() => {
     setDevUp(undefined);
-    if (devEntry) void devServerReachable(devEntry.path).then(setDevUp);
+    if (!devEntry) return;
+    const target = isExternalPath(devEntry.path)
+      ? devEntry.path
+      : new URL('../' + devEntry.path, window.location.href).href;
+    void devServerReachable(target).then(setDevUp);
   }, [devEntry]);
 
   const activeVersionId = currentEntryId(versions);
@@ -207,7 +212,7 @@ export default function App() {
           aria-label="Design system version"
         >
           {selectVersionOptions.map((v) => {
-            const devDown = v.id === 'dev' && isExternalPath(v.path) && devUp === false;
+            const devDown = v.id === 'dev' && devUp === false;
             return (
               <option key={v.id} value={v.id} disabled={devDown}>
                 {devDown ? `${v.label} — not running` : v.label}

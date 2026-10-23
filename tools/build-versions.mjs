@@ -40,10 +40,11 @@ rmSync(siteDir, { recursive: true, force: true });
 rmSync(wtRoot, { recursive: true, force: true });
 mkdirSync(siteDir, { recursive: true });
 
-// The 'dev' entry is an absolute URL — picking it in the dropdown leaves the
-// versioned site for the live dev server (npm run dev). DEV_URL is overridable
-// for non-standard ports.
-const devUrl = process.env.DEV_URL ?? 'http://localhost:5173';
+// The 'dev' entry points at the site server's /dev/ proxy to the vite dev
+// server (npm run dev:site). On hosts without the proxy it 404s and the
+// picker disables the entry. DEV_URL can instead give an absolute URL
+// (e.g. http://localhost:5173) to link out instead of proxying.
+const devUrl = process.env.DEV_URL ?? 'dev/';
 const versions = [
   { id: 'dev', label: 'dev (hot reload)', path: devUrl },
   { id: 'latest', label: 'latest', path: 'latest/' },

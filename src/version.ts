@@ -15,13 +15,18 @@ export function isExternalPath(path: string): boolean {
 }
 
 /**
- * True when a dev server answers at `url`. no-cors yields an opaque response
- * when the port is listening and rejects when nothing is there.
+ * True when a dev server answers at `url`. Absolute (cross-origin) targets
+ * use no-cors — an opaque response means something is listening. Same-origin
+ * targets (the /dev/ proxy) can check res.ok directly.
  */
 export async function devServerReachable(url: string): Promise<boolean> {
   try {
-    await fetch(url, { mode: 'no-cors', cache: 'no-store' });
-    return true;
+    if (isExternalPath(url)) {
+      await fetch(url, { mode: 'no-cors', cache: 'no-store' });
+      return true;
+    }
+    const res = await fetch(url, { cache: 'no-store' });
+    return res.ok;
   } catch {
     return false;
   }
