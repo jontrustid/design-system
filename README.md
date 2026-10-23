@@ -23,25 +23,26 @@ and a "View source" toggle.
 ## Versioned catalogue site
 
 ```bash
-npm run build:site     # -> site/ : latest/ + one dir per v* git tag
+npm run build:site     # -> site/ : one dir per v* git tag
 npm run preview:site   # static-serve site/ at http://localhost:5180
 npm run dev:site       # :5180 + vite dev server behind the /dev/ proxy
 ```
 
-`build-versions.mjs` builds the working tree into `site/latest/` and each
-`v*` git tag (via temporary worktrees) into `site/<ver>/`, then writes
-`site/versions.json` + a `latest/` redirect. Deploy `site/` to any static
-host as the site root — the header's version dropdown fetches
-`../versions.json`, so older builds automatically list newer releases.
-Each version dir also carries that release's `design-system.css`.
+`build-versions.mjs` builds each `v*` git tag (via temporary worktrees) into
+`site/<ver>/`, then writes `site/versions.json` + a root redirect to the
+newest tag. Deploy `site/` to any static host as the site root — the header's
+version dropdown fetches `../versions.json`, so older builds automatically
+list newer releases. Each version dir also carries that release's
+`design-system.css`.
 
-The dropdown's **dev (hot reload)** entry points at `/dev/` on the site
-server. `preview:site` proxies `/dev/*` — including the HMR websocket — to the
-vite dev server, so `dev:site` gives you one URL for everything: released
-versions, `latest`, and the live working tree. The entry is probed on load and
-shown disabled when no dev server is reachable (e.g. a deployed static host).
-`npm run dev` alone still works — vite serves under `/dev/` itself so both
-access paths resolve identically.
+There is deliberately no `latest/` snapshot — the working tree is served
+**live** instead. The dropdown's **dev (working copy)** entry points at
+`/dev/` on the site server. `preview:site` proxies `/dev/*` — including the
+HMR websocket — to the vite dev server, so `dev:site` gives you one URL for
+everything: every released version plus the hot-reloading working copy. The
+entry is probed on load and shown disabled when no dev server is reachable
+(e.g. a deployed static host). `npm run dev` alone still works — vite serves
+under `/dev/` itself so both access paths resolve identically.
 
 Release flow: bump `version` in package.json -> `npm run build` -> commit ->
 `git tag vX.Y.Z` -> `npm run build:site` -> deploy `site/`.

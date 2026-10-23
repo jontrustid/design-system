@@ -1,11 +1,12 @@
 // Builds the versioned catalogue site:
-//   site/latest/      — catalogue built from the current working tree
 //   site/<ver>/       — catalogue built from each git tag matching v*
 //   site/versions.json — manifest the in-app version picker reads (../versions.json)
-//   site/index.html   — redirect to latest/
+//   site/index.html   — redirect to the newest tagged version
+// The working tree is NOT built — the picker's 'dev (working copy)' entry
+// serves it live via the /dev/ proxy (see serve-site.mjs / dev-site.mjs).
 // Deploy the contents of site/ to any static host as the site root.
 import { execFileSync, execSync } from 'node:child_process';
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,18 +42,14 @@ rmSync(wtRoot, { recursive: true, force: true });
 mkdirSync(siteDir, { recursive: true });
 
 // The 'dev' entry points at the site server's /dev/ proxy to the vite dev
-// server (npm run dev:site). On hosts without the proxy it 404s and the
-// picker disables the entry. DEV_URL can instead give an absolute URL
-// (e.g. http://localhost:5173) to link out instead of proxying.
+// server (npm run dev:site) — that IS the working copy, hot-reloaded. On
+// hosts without the proxy it 404s and the picker disables the entry.
+// DEV_URL can instead give an absolute URL (e.g. http://localhost:5173)
+// to link out instead of proxying.
 const devUrl = process.env.DEV_URL ?? 'dev/';
-const versions = [
-  { id: 'dev', label: 'dev (hot reload)', path: devUrl },
-  { id: 'latest', label: 'latest', path: 'latest/' },
-];
+const versions = [{ id: 'dev', label: 'dev (working copy)', path: devUrl }];
 
 try {
-  buildVersion(root, join(siteDir, 'latest'), 'working tree');
-
   for (const tag of tags) {
     const ver = tag.replace(/^v/, '');
     const wt = join(wtRoot, tag);
@@ -70,11 +67,12 @@ try {
 }
 
 writeFileSync(join(siteDir, 'versions.json'), JSON.stringify(versions, null, 2));
+// Land on the newest release (or the working copy if nothing is tagged yet).
+const home = versions[1]?.path ?? 'dev/';
 writeFileSync(
   join(siteDir, 'index.html'),
-  '<!doctype html><meta http-equiv="refresh" content="0; url=latest/">',
+  `<!doctype html><meta http-equiv="refresh" content="0; url=${home}">`,
 );
 
-const pkgVersion = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version;
-console.log(`\nsite/ ready — latest (v${pkgVersion}) + ${tags.length} tagged version(s): ${tags.join(', ') || 'none'}`);
+console.log(`\nsite/ ready — ${tags.length} tagged version(s): ${tags.join(', ') || 'none'} (working copy served live at /dev/)`);
 console.log('Preview: node tools/serve-site.mjs');
