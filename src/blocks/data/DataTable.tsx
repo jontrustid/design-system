@@ -27,7 +27,7 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(' ');
 }
 
-export default function DataTable<Row extends Record<string, unknown>>({
+export default function DataTable<Row>({
   columns,
   rows,
   rowKey,
@@ -68,7 +68,9 @@ export default function DataTable<Row extends Record<string, unknown>>({
             >
               {columns.map((col) => (
                 <td key={col.key} className={col.className}>
-                  {col.cell ? col.cell(row, i) : String(row[col.key] ?? '')}
+                  {col.cell
+                    ? col.cell(row, i)
+                    : String((row as Record<string, unknown>)[col.key] ?? '')}
                 </td>
               ))}
             </tr>
