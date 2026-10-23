@@ -36,7 +36,9 @@
   "scripts": {
     "dev": "node node_modules/vite/bin/vite.js",
     "build": "node node_modules/typescript/bin/tsc -b && node node_modules/vite/bin/vite.js build && node tools/copy-css.mjs",
-    "preview": "node node_modules/vite/bin/vite.js preview"
+    "build:site": "node tools/build-versions.mjs",
+    "preview": "node node_modules/vite/bin/vite.js preview",
+    "preview:site": "node tools/serve-site.mjs"
   },
   "dependencies": {},
   "devDependencies": {

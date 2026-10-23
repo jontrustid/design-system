@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { catalogue } from './registry/catalogue';
 import type { CatalogueEntry } from './registry/catalogue';
 import ThemeSection from './theme/ThemeSection';
+import { CURRENT_VERSION, currentEntryId, fetchVersions } from './version';
+import type { VersionEntry } from './version';
 
 const THEMES = [
   { id: 'veriscan', label: 'VeriScan' },
@@ -112,7 +114,22 @@ export default function App() {
   const [dark, setDark] = useState(
     () => localStorage.getItem('theme')?.endsWith('-dark') ?? false,
   );
+  const [versions, setVersions] = useState<VersionEntry[]>([]);
   const theme = `${themeId}${dark ? '-dark' : ''}`;
+
+  useEffect(() => {
+    void fetchVersions().then(setVersions);
+  }, []);
+
+  const activeVersionId = currentEntryId(versions);
+  const versionOptions: VersionEntry[] =
+    versions.some((v) => v.id === activeVersionId) || versions.length === 0
+      ? versions
+      : [{ id: activeVersionId, label: `v${CURRENT_VERSION} (dev)`, path: '' }, ...versions];
+  const selectVersionOptions =
+    versionOptions.length > 0
+      ? versionOptions
+      : [{ id: 'dev', label: `v${CURRENT_VERSION} (dev)`, path: '' }];
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -157,6 +174,26 @@ export default function App() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        <select
+          className="select select-sm w-32"
+          value={activeVersionId}
+          onChange={(e) => {
+            const target = versions.find((v) => v.id === e.target.value);
+            if (target?.path) {
+              const url = new URL('../' + target.path, window.location.href);
+              url.hash = '';
+              url.search = '';
+              window.location.assign(url);
+            }
+          }}
+          aria-label="Design system version"
+        >
+          {selectVersionOptions.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.label}
+            </option>
+          ))}
+        </select>
         <select
           className="select select-sm w-32"
           value={themeId}

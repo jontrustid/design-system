@@ -20,6 +20,23 @@ npm run build    # type-check + production build + dist/design-system.css
 The catalogue page lists every block grouped by category, with a live preview
 and a "View source" toggle.
 
+## Versioned catalogue site
+
+```bash
+npm run build:site     # -> site/ : latest/ + one dir per v* git tag
+npm run preview:site   # static-serve site/ at http://localhost:5180
+```
+
+`build-versions.mjs` builds the working tree into `site/latest/` and each
+`v*` git tag (via temporary worktrees) into `site/<ver>/`, then writes
+`site/versions.json` + a `latest/` redirect. Deploy `site/` to any static
+host as the site root — the header's version dropdown fetches
+`../versions.json`, so older builds automatically list newer releases.
+Each version dir also carries that release's `design-system.css`.
+
+Release flow: bump `version` in package.json -> `npm run build` -> commit ->
+`git tag vX.Y.Z` -> `npm run build:site` -> deploy `site/`.
+
 ## Using it in an app
 
 Add the dependency (git tag while unpublished; swap for a registry version once
