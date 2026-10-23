@@ -17,8 +17,8 @@ export interface ImageCropProps
   extends Omit<ComponentPropsWithRef<'div'>, 'onChange'> {
   src: string;
   alt?: string;
-  /** Fires while dragging and on release with the current rect. */
-  onCropChange?: (rect: CropRect) => void;
+  /** Fires while dragging and on release with the current rect; undefined when cleared. */
+  onCropChange?: (rect: CropRect | undefined) => void;
   defaultRect?: CropRect;
 }
 
@@ -55,7 +55,7 @@ export default function ImageCrop({
 
   function update(next: CropRect | undefined) {
     setRect(next);
-    if (next) onCropChange?.(next);
+    onCropChange?.(next);
   }
 
   function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
@@ -78,7 +78,7 @@ export default function ImageCrop({
 
   function handlePointerUp() {
     dragOrigin.current = undefined;
-    setRect((r) => (r && (r.width < MIN_SIZE || r.height < MIN_SIZE) ? undefined : r));
+    if (rect && (rect.width < MIN_SIZE || rect.height < MIN_SIZE)) update(undefined);
   }
 
   function handleKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
